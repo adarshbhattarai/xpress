@@ -1,0 +1,21 @@
+<div class="all-wrapper fixed-header left-menu">
+	<div ng-include="'templates/header.html'"></div>
+	<div ng-include="'templates/left-sidebar.html'"></div>
+	<div class="main-content">
+		<div class="request">
+			<header>Request Ride</header>
+
+			<div class='request'>
+				<label for="nameInput">Request A ride:</label>
+				<input type='text' id='nameInput' ng-model="request.nameInput" placeholder='enter a username...'>
+			</div>
+
+			<ul id='response-message'  class="example-notification"></ul>
+
+			<footer>
+				<button type="submit"  class="btn btn-warning" ng-model="request.submitrequest" ng-value="Requested" ng-click="request()" >Request Driver<span class="glyphicon glyphicon-send"></span></button>
+			</footer>
+		</div>
+	</div>
+	<div ng-include="'templates/footer.html'" ng-cloak></div>
+</div>

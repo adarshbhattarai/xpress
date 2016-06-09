@@ -1,0 +1,42 @@
+
+<div ng-include="'templates/header.html'" ng-cloak></div>
+<div ng-include="'templates/left-sidebar.html'" ng-cloak></div>
+
+<div class="container">
+	<form name="deliveryGuyForm" class="well form-horizontal" ng-submit="applyForDeliveryGuy()">
+		<fieldset>
+      		<legend>Add New Delivery Guy </legend>
+			<div class="form-group">
+			    <label class="col-md-4 control-label">Driver Licence No</label>  
+			    <div class="col-md-6 inputGroupContainer">
+			        <div class="input-group">
+			          <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+			          <input  name="dirverLicenceNo" placeholder="Driver Licence No" class="form-control"  ng-model ="deliveryRequest.dirverLicenceNo" type="text" required>
+			        </div>
+			    </div>
+			</div>
+
+			<div class="form-group">
+			    <label class="col-md-4 control-label">Vehicle model</label>  
+			    <div class="col-md-6 inputGroupContainer">
+			        <div class="input-group">
+			          <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+			          <input  name="vehicleModel" placeholder="Vehicle model" class="form-control"  ng-model ="deliveryRequest.vehicleModel" type="text" required>
+			        </div>
+			    </div>
+			</div>
+      		
+            
+            <div class="form-group">
+    			<div class="col-sm-offset-2 col-sm-6">
+      				<button type="submit" class="btn btn-primary">Apply</button>
+      				<button type="reset" class="btn btn-default" ng-click="cancelRequestForm()">Cancel</button>
+    			</div>
+  			</div>
+          </div>
+        </div>
+      	</fieldset>
+	</form>
+</div>
+
+<div ng-include="'templates/footer.html'" ng-cloak></div>
