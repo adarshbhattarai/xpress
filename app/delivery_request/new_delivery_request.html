@@ -3,171 +3,279 @@
 <script src="delivery_request/map.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initAutocomplete" async defer></script>
 <!-- <script src="http://maps.google.com/maps/api/js?key=AIzaSyAurhKMKx41IeLjrSkg9OddA9-eduTz3vo&sensor=false"></script> -->
-
+<style>
+  td{
+    padding-bottom:10px 
+  }
+</style>
 
 <div class="all-wrapper fixed-header left-menu">
   <div ng-include="'templates/header.html'"></div>
   <div ng-include="'templates/left-sidebar.html'"></div>
   <div class="main-content">
     <div class="container">
-     <form name="deliveryForm" class="well form-horizontal" ng-submit="addDeliveryRequest()"  >
       <fieldset>
         <legend>Add New Delivery Request</legend>
-        <div>
-          {{successOrErrorMessage}}
-        </div>
-        <!-- payment div/ form -->
+        <!--  Payment Form -->  
         <div class="col-sm-6" ng-show="paymentform">
-          <form id="checkout" method="POST" action="/process">
-            <div class="pure-g">
-              <label class="pure-u-1-3 label" for="amount">Name your price:</label>
-              <input class="pure-u-2-3" id="amount" class="pure-input-1" name="amount" type="text" placeholder="XX.XX" required>
-            </div>
-            <br>
+         <form id="checkout" method="POST" action="/process" novalidate>
+           <div class="pure-g">              <input id="amount" type="hidden" name="amount" type="hidden" placeholder="XX.XX" required value="{{deliveryRequest.amount}}" readonly="true">              <label for="amount" class="col-sm-4 control-label">Your Total Payment is ${{deliveryRequest.amount}} </label>
+           </div>
+          <br>
             <div id="payment-form"></div>
-            <button type="submit">Pay</button>
+            <button type="submit" ng-model= "paymentPostProcess">Pay</button>
           </form>
         </div>
-        <!-- delivery div -->
-        <div class="col-sm-6" ng-hide="paymentform">
-          <div class="form-group">
-            <label class="col-md-4 control-label">Bill No</label>  
-            <div class="col-md-8 inputGroupContainer">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-pushpin"></i></span>
-                <input  name="billNumber" placeholder="bill no" class="form-control"  ng-model ="deliveryRequest.billNo" type="text" required>
+        
+        <!-- delivery form -->
+        <div ng-hide="paymentform">
+          <div class="col-sm-6" >
+            <form name="deliveryForm" class="well form-horizontal" ng-submit="addDeliveryRequest()" >
+         <!--      <div class="form-group">
+                <label class="col-md-4 control-label">Bill No</label>  
+                <div class="col-md-8 inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-pushpin"></i></span>
+                    <input  name="billNumber" placeholder="bill no" class="form-control"  ng-model ="deliveryRequest.billNo" type="text" required>
+                  </div>
+                </div>
+              </div> -->
+              <div class="form-group">
+                <label class="col-md-4 control-label">Recipient Name</label>  
+                <div class="col-md-8 inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input  name="fullName" placeholder="Recipient full name" class="form-control"  ng-model ="deliveryRequest.fullName" type="text" required>
+                  </div>
+                </div>
               </div>
-            </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label">Recipient Phone #</label>  
+                <div class="col-md-8 inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-phone-alt"></i></span>
+                    <input name="phone" placeholder="(845)555-1212" class="form-control" ng-model ="deliveryRequest.phone" type="number" ng-pattern="/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/" required>
+                  </div>
+                </div>
+              </div>
+        <!--       <div class="form-group">
+                <label class="col-md-4 control-label">No. of Boxes</label>  
+                <div class="col-md-8 inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
+                    <input  name="numberOFBox" placeholder="No. of boxes" class="form-control"  ng-model ="deliveryRequest.boxNum" type="number" required>
+                  </div>
+                </div>
+              </div>  -->
+              <div class="form-group">
+                <label class="col-md-4 control-label">Package Description</label>
+                <div class="col-md-8 inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
+                     <button class="btn btn-primary" data-toggle="modal" data-target="#myModalNorm">
+                       Click here to add package description
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group" ng-show="packageDetails">
+                <label class="col-md-4 control-label">Items Lists</label>  
+                <div class="col-md-8 ">
+                  <!-- <div class="input-group"> -->
+                    <!-- <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span> -->
+                    <table class="table table-hover text-center">
+                      <thead>
+                        <th>
+                          <td><b>Category</b></td>
+                          <td><b>Quantity</b></td>
+                        </th>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="package in packageList track by $index">
+                          <td >{{$index + 1}}</td>
+                          <td>{{package.type}}</td>
+                          <td>{{package.quantity}}</td>
+                          <td><a href="" data-ng-click="remove($index)">Remove</button></a></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  <!-- </div> -->
+                </div>
+              </div>
+
+         <!--      <div class="form-group">
+                <label class="col-md-4 control-label">Weight </label>  
+                <div class="col-md-8 inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
+                    <input  name="deliveryWeight" placeholder="Weigh in Pounds" class="form-control"  ng-model ="deliveryRequest.weight" type="number" required>
+                  </div>
+                </div>
+              </div>  -->
+       
+              <div class="form-group">
+                <label class="col-md-4 control-label">Package Location</label>  
+                <div class="col-md-8 inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                    <input  type="text" id="pac-input" name="pac-input" ng-model="packageLocation" placeholder="Package Location" class="form-control" required>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label">Destination Address</label>  
+                <div class="col-md-8 inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                    <input  type="text" id="destination" name="destinationAdd" ng-model="destinationAddress"placeholder="Destination" class="form-control" required>
+                  </div>
+                </div>
+
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label">Delivery Within(hr)</label>  
+                <div class="col-md-8 inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                    <input  name="deliveryWithin" placeholder="Expected delivery time(hour)" class="form-control"  ng-model ="deliveryRequest.deliveryTime" type="number" required>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-md-4 control-label">Vehicle Type</label>
+                <div class="col-md-8 selectContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                    <select name="state" class="form-control selectpicker" ng-model ="deliveryRequest.vehicleType" placeholder="Choose vehicle" required>
+                      <option value="" >Select vehicle</option>
+                      <option>Passenger car</option>
+                      <option>Family car</option>
+                      <option>SUV</option>
+                      <option>Truck</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Images -->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="pictures">Add Pictures</label>
+                <div class="col-md-4">
+                  <!-- <input id="pictures" type="file" ng-model="files"  name="files" ngf-max-size="2MB" ngf-keep="true"  /> -->
+                  <input type="file" value="upload" id="fileButton" required></input>
+                  <progress value="0" max="100" id="uploader"> 0% </progress>
+                </div>
+              </div>
+
+
+              <div class="form-group">
+                <label for="totalAmount" class="col-sm-4 control-label">Total Cost </label>
+                <div class="col-sm-6">
+                  <label style="padding-top: 10px;"><!-- {{deliveryRequest.amount + 0 | currency}} --></label>
+                </div>
+              </div> 
+              <div class="form-group">
+                <label for="unpaidAmount" class="col-sm-4 control-label">Your Estimated Cost </label>
+                <div class="col-sm-6">
+                  <label style="padding-top: 10px; "><!-- {{deliveryRequest.amount - deliveryRequest.paidAmt | currency}} --></label>
+                </div>
+              </div> 
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-6">
+                  <button type="submit" class="btn btn-primary">Confirm and Pay</button>
+                  <button type="reset" class="btn btn-default" ng-click="cancelRequestForm()">Cancel</button>
+                </div>
+              </div>
+            </form>
           </div>
-          <div class="form-group">
-            <label class="col-md-4 control-label">Full Name</label>  
-            <div class="col-md-8 inputGroupContainer">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                <input  name="fullName" placeholder="Full name" class="form-control"  ng-model ="deliveryRequest.fullName" type="text" required>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-4 control-label">Phone #</label>  
-            <div class="col-md-8 inputGroupContainer">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-phone-alt"></i></span>
-                <input name="phone" placeholder="(845)555-1212" class="form-control" ng-model ="deliveryRequest.phone" type="number" ng-pattern="/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/" required>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-4 control-label">No. of Boxes</label>  
-            <div class="col-md-8 inputGroupContainer">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
-                <input  name="numberOFBox" placeholder="No. of boxes" class="form-control"  ng-model ="deliveryRequest.boxNum" type="number" required>
-              </div>
-            </div>
-          </div> 
-          <div class="form-group">
-            <label class="col-md-4 control-label">Weight Of Delivery</label>  
-            <div class="col-md-8 inputGroupContainer">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
-                <input  name="deliveryWeight" placeholder="Weigh in Pounds" class="form-control"  ng-model ="deliveryRequest.weight" type="number" required>
-              </div>
-            </div>
-          </div> 
-        <!-- <div class="form-group">
-          <label class="col-md-4 control-label">Amount</label>  
-          <div class="col-md-8 inputGroupContainer">
-            <div class="input-group">
-             <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
-             <input id="amount" name="amount" placeholder="Cost of package" class="form-control"  ng-model ="deliveryRequest.amount" type="number" required>
+        </div>
+        <!-- Google map display -->
+        <div  class="col-sm-6"  >
+          <div id="map" style="overflow:hidden;width:500px;height:500px;resize:none;max-width:100%; max-height:100%; "></div>
+            <div>
+              <center>
+               <small>*** CLick on map to set the delivery if input address does not apply</small>
+             </center>
            </div>
-         </div>
-
-       </div>
-       <div class="form-group">
-        <label class="col-md-4 control-label">Amount Paid</label>  
-        <div class="col-md-8 inputGroupContainer">
-          <div class="input-group">
-           <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
-           <input name="amountPaid"  placeholder="Amount Paid" class="form-control" ng-model ="deliveryRequest.paidAmt" type="number"required>
-         </div>
-         <span ng-if="deliveryRequest.paidAmt > deliveryRequest.amount" style="color: red; ">
-            Can't exceed total amount
-            </span>
-       </div>
-     </div> -->
-     <div class="form-group">
-      <label class="col-md-4 control-label">Package Location</label>  
-      <div class="col-md-8 inputGroupContainer">
-        <div class="input-group">
-          <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-          <input  type="text" id="pac-input" name="pac-input" ng-model="packageLocation" placeholder="Package Location" class="form-control" required>
         </div>
-      </div>
+      </fieldset> 
     </div>
-    <div class="form-group">
-      <label class="col-md-4 control-label">Destination Address</label>  
-      <div class="col-md-8 inputGroupContainer">
-        <div class="input-group">
-          <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-          <input  type="text" id="destination" name="destinationAdd" ng-model="destinationAddress"placeholder="Destination" class="form-control" required>
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-md-4 control-label">Delivery Within(hr)</label>  
-      <div class="col-md-8 inputGroupContainer">
-        <div class="input-group">
-          <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-          <input  name="deliveryWithin" placeholder="Expected delivery time(hour)" class="form-control"  ng-model ="deliveryRequest.deliveryTime" type="number" required>
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="totalAmount" class="col-sm-4 control-label">Total Cost </label>
-      <div class="col-sm-6">
-        <label style="padding-top: 10px;"><!-- {{deliveryRequest.amount + 0 | currency}} --></label>
-      </div>
-    </div> 
-
-    <div class="form-group">
-      <label for="unpaidAmount" class="col-sm-4 control-label">Your Estimated Cost </label>
-      <div class="col-sm-6">
-        <label style="padding-top: 10px; "><!-- {{deliveryRequest.amount - deliveryRequest.paidAmt | currency}} --></label>
-      </div>
-    </div> 
-
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-6">
-        <button type="submit" class="btn btn-primary">Confirm and Pay</button>
-        <button type="reset" class="btn btn-default" ng-click="cancelRequestForm()">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Google map display -->
-
-  <div  class="col-sm-6"  >
-    <div id="map" style="overflow:hidden;width:500px;height:500px;resize:none;max-width:100%; max-height:100%; "></div>
-    <div>
-      <center>
-       <small>*** CLick on map to set the delivery if input address does not apply</small>
-     </center>
-   </div>
- </div>
-</fieldset>
-</form>
+  </div> 
+  <!-- <div ng-include="'templates/footer.html'" ng-cloak></div>
+  -->
 </div>
-</div> 
-<!-- <div ng-include="'templates/footer.html'" ng-cloak></div>
---></div>
 
+<!--popup Modal -->
+<div class="modal fade" id="myModalNorm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="widget widget-blue">
+              <div class="widget-title">
+                <div class="widget-controls">
+                  <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <h3>Package Description</h3>
+              </div>
+            </div> 
+            <!-- Modal Body -->
+            <div class="modal-body">
+              <form ng-submit="packageDescription()">
+                <table style="width:100%">
+                  <tr>
+                    <td><label>Size</label> </td>
+                    <td colspan="3"><input type = "number" ng-model = "package.size.length" placeholder="Length"  style="width: 5em">X
+                      <input type = "number" ng-model = "package.size.breadth" placeholder="Breadth"style="width: 5em">X
+                      <input type = "number" ng-model = "package.size.height" placeholder="Height" style="width: 5em">cm
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label>Weight</label> </td>
+                    <td><input type = "number" ng-model = "package.weight" placeholder="Weight" style="width: 5em">lbs</td>
+                  </tr>
+                  <tr>
+                    <td><label>Package Type</label> </td>
+                    <td>
+                      <select ng-model = "package.type">
+                          <option value="officeSupplies">Office Supplies</option>
+                          <option value="groceries">Groceries</option>
+                          <option value="hotFood">Hot food</option>
+                          <option value="frozenItems">Frozen items</option>
+                          <option value="furniture">Furniture</option>
+                          <option value="parts">Parts</option>
+                          <option value="others">Others</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label>Quantity</label> </td>
+                    <td><input type = "number" ng-model="package.quantity" placeholder="Quantity" style="width: 5em"></td>
+                  </tr>
+                  <tr>
+                    <td colspan="4"><label>Do you want driver to assemble these items?</label> </td>
+                  </tr>
+                  <tr>
+                      <td colspan="1"><input type="radio" name="assemble" ng-model="package.assemble.true" value="yes"> Yes </td>
+                      <td colspan="1"><input type="radio" name="assemble" ng-model="package.assemble.false" value="No" >No</td>
+                  </tr>
+                  <tr>
+                    <td colspan="1"><label>Add Pictures</label></td>
+                    <td> 
+                    <progress value="0" max="100"  id="progressbar"> 0% </progress>
+                     <input type="file" value="upload" ng-model="package.picture" id="pictures" required></input>    
+                     </td>      
+                  </tr>
+                </table>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Close
+                  </button>
+                  <input type="submit" class="btn btn-primary" value="save">
+                  </button>
+                </div>
+              </form>
+            </div>            
+            <!-- Modal Footer -->  
+        </div>
+  </div>
+</div>
 
-
-<script>
-  function myFunction(){
-    console.log('Here');
-    console.log( $('#pac-input').val());
-  }
-</script>

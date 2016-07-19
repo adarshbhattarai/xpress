@@ -14,10 +14,51 @@ angular.module('myApp.settings', ['ngRoute','firebase'])
 }])
 
 
+.filter('tel', function () {
+    return function (tel) {
+        console.log(tel);
+        if (!tel) { return ''; }
+
+        var value = tel.toString().trim().replace(/^\+/, '');
+
+        if (value.match(/[^0-9]/)) {
+            return tel;
+        }
+
+        var country, city, number;
+
+        switch (value.length) {
+            case 1:
+            case 2:
+            case 3:
+                city = value;
+                break;
+
+            default:
+                city = value.slice(0, 3);
+                number = value.slice(3);
+        }
+
+        if(number){
+            if(number.length>3){
+                number = number.slice(0, 3) + '-' + number.slice(3,7);
+            }
+            else{
+                number = number;
+            }
+
+            return ("(" + city + ") " + number).trim();
+        }
+        else{
+            return "(" + city;
+        }
+
+    };
+})
 
 .controller('SettingsCtrl', ['$scope','$location','LoginService','$firebase', function($scope,$location,LoginService,$firebase) {
 	$scope.username = LoginService.getUser();
-  
+    $scope.sideMenu = sessionStorage.sideMenu;
     
    if(!$scope.username){
       $location.path('/login');
@@ -124,6 +165,10 @@ $scope.editFormSubmit = function(){
      var city = $scope.city;
      var state = $scope.state;
      var zip = $scope.zip;
+     var profilePicURL = $scope.profilePicURL;
+     console.log()
+     /*var role = 'USER';
+     console.log("User role is: "+role);*/
      console.log(city + "  " + " State" + state);
      fb.$push({
          firstName:firstName,
@@ -137,6 +182,9 @@ $scope.editFormSubmit = function(){
          emailId:user,
          current_latitude:$scope.latitude,
          current_longitude:$scope.longitude,
+         profilePicURL:profilePicURL,
+
+        /* role:role,*/
          '.priority':user
 
      });
@@ -157,6 +205,7 @@ $scope.editFormSubmit = function(){
         console.log("here");
         var id = $scope.id;
         console.log(id);
+        
         var records = $scope.requests.$getRecord(id);
         records.firstName = $scope.firstName;
         records.lastName = $scope.lastName;
@@ -168,16 +217,61 @@ $scope.editFormSubmit = function(){
         records.zip = $scope.zip;
         records.current_longitude = $scope.longitude;
         records.current_latitude = $scope.latitude;
+        records.profilePictureURL = $scope.profilePicURL;
         $scope.requests.$save(records);
         $scope.editForm = false ;
         console.log("records.firstName " + records.firstName); 
         console.log("latitude-->" + $scope.latitude);
+        console.log("welllll..."+records.profilePictureURL);
 
     }
     
 }
+/*Image uploading*/
+        var uploaderpp =  document.getElementById('uploader');
+          var fileButton = document.getElementById('fileButton');
+         
+          fileButton.addEventListener ('change', function(e){
+                          //Get FIle
+                          var file = e.target.files[0];
+
+                          // Create  a storage ref
+                          var storageRef = firebase.storage().ref('Customer_Profile_Picture/' + file.name);
+                          console.log(storageRef);
+
+
+                          //upload File
+                          var task = storageRef.put(file);
+
+                          //Update Progress Bar
+                          task.on('state_changed',
+
+                            function progress(snapshot){
+
+                              var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100 ;
+                              uploaderpp.value = percentage;
+                              console.log(percentage);
+
+                            },
+
+                            function error(err){
+
+                                // Do something iferror occurs
+                            },
+
+                            function complete(){
+                              
+                            $scope.profilePicURL = task.snapshot.downloadURL;
+  
+                             });
+
+
+                      });
+
+
 
 $scope.logout = function(){
    LoginService.logoutUser();
 }
 }]);
+

@@ -1,15 +1,14 @@
 'use strict';
 
-angular.module('myApp.adminPannel', ['ngRoute','firebase'])
+angular.module('myApp.adminPannel', ['ngRoute','firebase','angularUtils.directives.dirPagination'])
 
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/adminPannel', {
         resolve:{
             "check": function($location){
-               // var data = sessionStorage.getItem('loginAsAdmin');
-                console.log(sessionStorage.loggedIn);
-                if(!sessionStorage.loggedIn){
-                    $location.path('/login');
+                console.log(sessionStorage.adminRole);
+                if(sessionStorage.adminRole == 'false'){
+                    $location.path('/');
                 }
             }
 
@@ -19,20 +18,18 @@ angular.module('myApp.adminPannel', ['ngRoute','firebase'])
 	});
 }])
 
-.controller('adminPannelCtrl', ['$scope','$location','LoginService','$firebase', function($scope,$location,LoginService,$firebase) {
+.controller('adminPannelCtrl', ['$scope','$location','LoginService','$firebase','Roles_Constant', function($scope,$location,LoginService,$firebase,Roles_Constant) {
 	$scope.username = LoginService.getUser();
+
+    /*console.log("this is "+Roles_Constant.Roles['admin']);*/
    // $scope.editFormShow = false;
-    console.log(" Reached here");
     if(!$scope.username){
         $location.path('/login');
     }
 
     var firebaseObj = new Firebase("https://x-press-yeti.firebaseio.com/user/business_customer");
     var sync = $firebase(firebaseObj);
-    console.log(sync.$asArray());
     $scope.requests = sync.$asArray();
-    console.log($scope.requests);
-
 
     $scope.update = function(request){
            // $scope.editFormShow = true ;
@@ -74,20 +71,43 @@ angular.module('myApp.adminPannel', ['ngRoute','firebase'])
     }
 
     //Row limit to display
-     $scope.rowLimit = 5;
+     $scope.rowLimit = "5";
 
     //For search
-    $scope.search = function(item){
-        var searchByInput = $scope.searchBy;
 
+  /*  $scope.searchList = ["First_Name", "Last_Name","email", "Phone","Address","City","State","Zip"];*/
+
+    //Searching for particular field, search through phone not working
+   /* $scope.search = "";*/
+    $scope.searchBy="firstName";
+    $scope.search = function(item){
+        var searchBy = $scope.searchBy;
+        console.log("search by:"+searchBy);
         if($scope.searchText === undefined){ //return all items
-            console.log("searcha by if condition "+searchByInput);
           return true;
         }
-        else if(item.firstName.toLowerCase().indexOf($scope.searchText.toLowerCase()) != -1){
-            console.log("search by else condition "+searchByInput);
-          return true;
+        else if(searchBy == "firstName" && (item.firstName.toLowerCase().indexOf($scope.searchText.toLowerCase())) != -1 ){
+            return true;
         }
+        else if(searchBy == "lastName" && (item.lastName.toLowerCase().indexOf($scope.searchText.toLowerCase())) != -1){
+            return true;
+        }
+        else if(searchBy == "phone" && (item.phone.toString().indexOf($scope.searchText.toLowerCase())) != -1){
+             return true;
+        } 
+        else if(searchBy == "address" && (item.address.toLowerCase().indexOf($scope.searchText.toLowerCase())) != -1){
+            return true;
+        }
+        else if(searchBy == "city" && (item.city.toLowerCase().indexOf($scope.searchText.toLowerCase())) != -1){
+            return true;
+        }
+        else if(searchBy == "state" && (item.state.toLowerCase().indexOf($scope.searchText.toLowerCase())) != -1){
+            return true;
+        }        else if(searchBy == "zip" && (item.zip.toString().indexOf($scope.searchText.toLowerCase())) != -1){
+
+            return true;
+        }
+
         else return false;
         
     };
@@ -99,15 +119,102 @@ angular.module('myApp.adminPannel', ['ngRoute','firebase'])
         $scope.reverseSort = ($scope.sortColumn == column)?!$scope.reverseSort:false;
         $scope.sortColumn = column;
       };
-  $scope.getSortClass = function(column){
+    $scope.getSortClass = function(column){
     if($scope.sortColumn == column){
       return $scope.reverseSort ? 'arrow-down' : 'arrow-up' 
     }
     return '';
   };
 
+
+/*delivery details*/
+var ref = new Firebase("https://x-press-yeti.firebaseio.com/delivery_request");
+var sync = $firebase(ref);
+ref.once("value", function(snapshot) {
+  $scope.countNewDelivery = snapshot.numChildren();
+  var approvedcount =0;
+  var cancelledcount =0 ;
+  var pendingCount = 0;
+  console.log(snapshot.val());
+
+    snapshot.forEach(function(childSnapshot) {
+    var childData = childSnapshot.val();
+    
+    if(childData.status == 'APPROVED'){
+    
+        approvedcount++;
+
+        }
+     else if(childData.status == 'Requested'){
+    
+        pendingCount++;
+
+        }
+    else if (childData.status == 'CANCEL'){
+    cancelledcount ++ ;
+
+
+    }
+
+
+});
+
+    $scope.approvedDeliveriesCount = approvedcount;
+    $scope.cancelledDeliveriesCount = cancelledcount;
+    $scope.pendindgRequestCount = pendingCount;
+    console.log(approvedcount);
+    console.log(cancelledcount);
+    console.log("Counts");
+
+});
+
+/*Driver details*/
+var driverObj = new Firebase("https://x-press-yeti.firebaseio.com/user/driver");
+var sync = $firebase(driverObj);
+driverObj.once("value", function(snapshot) {
+  $scope.countDriverRequest = snapshot.numChildren();
+  var approvedcount =0;
+  var cancelledcount =0 ;
+  var pendingCount = 0;
+
+    snapshot.forEach(function(childSnapshot) {
+    var childData = childSnapshot.val();
+    
+    if(childData.status == 'ACCEPT'){
+    
+        approvedcount++;
+
+        }
+     else if(childData.status == 'PENDING'){
+    
+        pendingCount++;
+
+        }
+    else if (childData.status == 'CANCEL'){
+    cancelledcount ++ ;
+
+
+    }
+
+
+});
+
+    $scope.approvedDriverCount = approvedcount;
+    $scope.cancelledDriverCount = cancelledcount;
+    $scope.pendindgDriverCount = pendingCount;
+    console.log(approvedcount);
+    console.log(cancelledcount);
+    console.log("Counts");
+
+});
+
+
+
+
+
+
+
     $scope.logout = function(){
-        delete sessionStorage.loggedIn;
         LoginService.logoutUser();
     }
 }]);

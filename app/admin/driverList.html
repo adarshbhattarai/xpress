@@ -1,0 +1,415 @@
+<div class="all-wrapper fixed-header left-menu">
+  <div ng-include="'admin/AdminTemplate/adminHeader.html'"></div>
+  <div ng-include="'admin/AdminTemplate/adminSidemenu.html'"></div>
+
+<!-- Body Content -->
+    <div class="main-content">
+      <div ng-show="driverDetails">
+        <div class="row">
+          <div class="widget widget-blue">
+            <div class="widget-title">
+              <div class="widget-controls">
+                <a href="" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
+                <a href="" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
+                <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
+                <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+                    <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
+                      <li class="dropdown-header">Set Widget Color</li>
+                      <li><a data-widget-color="blue" class="set-widget-color" href="">Blue</a></li>
+                      <li><a data-widget-color="red" class="set-widget-color" href="">Red</a></li>
+                      <li><a data-widget-color="green" class="set-widget-color" href="">Green</a></li>
+                      <li><a data-widget-color="orange" class="set-widget-color" href="">Orange</a></li>
+                      <li><a data-widget-color="purple" class="set-widget-color" href="">Purple</a></li>
+                    </ul>
+                </div>
+                <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
+                <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
+                <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
+              </div>
+              <h3><i class="fa fa-table"></i>List of Drivers</h3>
+            </div>
+            <div class="widget-content no-padding">
+              <div class="table-responsive">
+                <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                  <div class="row">
+                    <div class="col-sm-12" style="padding-top:5px;">
+                      <div class="pull-right">
+                        <div class="dataTables_filter" id="DataTables_Table_0_filter">
+                              Search by:<!-- <select ng-model="searchFrom" ng-options="x for x in searchList"></select> -->
+                              <select ng-model="searchBy">
+                                <option value="firstName" selected="selected">First Name</option>
+                                <option value="lastName">Last name</option>
+                                <option value="phone">Phone</option>
+                                <option value="address">Address</option>
+                                <option value="city">City</option>
+                                <option value="state">State</option>
+                                <option value="zip">Zip</option>
+                                <option value="email">Email</option>
+                              </select>
+                              <label>
+                                <input type="text" aria-controls="DataTables_Table_0" placeholder="Search by {{searchBy}}" ng-model="searchText" class="form-control input-sm" style="margin-left: 10px;">
+                                <input type="checkbox" ng-model="exactmatch" />Exact Match
+                              </label>
+                        </div>
+                      </div>
+                      <div class="pull-left">
+                            <div id="DataTables_Table_0_length" class="dataTables_length">
+                              <label>Show 
+                                  <select ng-model="rowLimit">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                  </select>
+                                  Rows</label>
+                            </div>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                       
+                    <table class="table table-bordered table-hover datatable dataTable" ng-hide="editForm">
+                      <thead>
+                        <tr>
+                              <th>Id</th>
+                              <th ng-click="sortData('date')">Date
+                                <div ng-class="getSortClass('date')"></div>
+                              </th>
+                              <th ng-click="sortData('firstName')">First Name
+                                <div ng-class="getSortClass('firstName')"></div>
+                              </th>
+                              <th ng-click="sortData('lastName')">Last Name
+                                <div ng-class="getSortClass('lastName')"></div>
+                              </th>
+                              <th ng-click="sortData('email')">Email
+                                <div ng-class="getSortClass('email')"></div></th>
+                              <th ng-click="sortData('phone')">Phone
+                                <div ng-class="getSortClass('phone')"></div>
+                              </th>
+                              <th ng-click="sortData('address')">Address
+                                <div ng-class="getSortClass('address')"></div>
+                              </th>
+                              <th ng-click="sortData('city')">City
+                              <div ng-class="getSortClass('city')"></div>
+                              </th>
+                              <th ng-click="sortData('state')">State
+                              <div ng-class="getSortClass('state')"></div>
+                              </th>
+                              <th ng-click="sortData('zip')">Zip
+                                <div ng-class="getSortClass('zip')"></div>
+                              </th> <th ng-click="sortData('status')">Current Status
+                                <div ng-class="getSortClass('status')"></div>
+                              </th>
+                               <th>Status
+                              </th>
+                              <th>Details</th>
+                              <th>Remove Drivers</th>
+                                                            
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="request in requests | filter:search:exactmatch| itemsPerPage:rowLimit| limitTo:rowLimit | orderBy: sortColumn:reverseSort ">
+                              <td>{{$index + 1}}</td>
+                              <td>{{request.date | date}}</td>
+                              <td>{{request.firstName}}</td>
+                              <td>{{request.lastName}}</td>
+                              <td>{{request.email}}</td>
+                              <td>{{request.phone}}</td>
+                              <td>{{request.address}}</td>
+                              <td>{{request.city}}</td>
+                              <td>{{request.state}}</td>
+                              <td>{{request.zip}}</td>
+                              <td>{{request.status}}</td>
+                              <td>
+                                <select name="status" class="form-control selectpicker" ng-change="statusChange(this, request)" ng-model ="status" required>
+                                  <option value="">CHANGE STATUS</option>
+                                  <option value="PENDING">PENDING</option>
+                                  <option value="ACCEPT">ACCEPT</option>
+                                  <option value="CANCEL">CANCEL</option>
+                                </select>
+                              </td>
+                              <td><a href="" ng-click="viewdetails(request)" >View Details</a></td>
+                              <!--  <td><a href="" ng-click="update(request)" ><span class="glyphicon glyphicon-edit"></span></a></td> -->
+                              <td><a href="" ng-click="deletePost(request)"><span class="glyphicon glyphicon-remove"></span>Delete</a></td>
+                            </tr>    
+                        </tbody>
+                      </table>
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="pull-right">
+                              <dir-pagination-controls
+                                 max-size="5"
+                                 direction-links="true"
+                                 boundary-links="true" >
+                              </dir-pagination-controls>
+                            </div>
+                            <div class="clearfix"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="widget widget-purple">
+              <div class="widget-title">
+                <div class="widget-controls">
+                  <a href="#" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
+                  <a href="" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
+                  <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
+                  <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+                    <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
+                      <li class="dropdown-header">Set Widget Color</li>
+                      <li><a data-widget-color="blue" class="set-widget-color" href="#">Blue</a></li>
+                      <li><a data-widget-color="red" class="set-widget-color" href="#">Red</a></li>
+                      <li><a data-widget-color="green" class="set-widget-color" href="#">Green</a></li>
+                      <li><a data-widget-color="orange" class="set-widget-color" href="#">Orange</a></li>
+                      <li><a data-widget-color="purple" class="set-widget-color" href="#">Purple</a></li>
+                    </ul>
+                  </div>
+                  <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
+                  <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
+                  <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
+                </div>
+                <h3>Approved Drivers</h3>
+              </div>
+              <div class="widget-content">
+                <div class="row">
+                   <table class="table table-bordered table-hover datatable dataTable" ng-hide="editForm">
+                    <thead>
+                      <tr>
+                        <th>Id</th>
+                        <th ng-click="sortData('firstName')">First Name
+                          <div ng-class="getSortClass('firstName')"></div>
+                        </th>
+                        <th ng-click="sortData('lastName')">Last Name
+                          <div ng-class="getSortClass('lastName')"></div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Search by particular selected field, need to be work on phone -->
+                     <!--  <tr ng-repeat="request in requests | filter:search| limitTo:rowLimit | orderBy: sortColumn:reverseSort "> -->
+                      <!-- Search by all the fields -->
+                       <tr ng-repeat="approved in approvedDrivers | filter:search| limitTo:rowLimit | orderBy: sortColumn:reverseSort ">
+                        <td>{{$index + 1}}</td>
+                        <td>{{approved.firstName}}</td>
+                        <td>{{approved.lastName}}</td>
+                        </tr>    
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="widget widget-green">
+              <div class="widget-title">
+                <div class="widget-controls">
+                  <a href="" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
+                  <a href="" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
+                  <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
+                  <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+                    <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
+                      <li class="dropdown-header">Set Widget Color</li>
+                      <li><a data-widget-color="blue" class="set-widget-color" href="#">Blue</a></li>
+                      <li><a data-widget-color="red" class="set-widget-color" href="#">Red</a></li>
+                      <li><a data-widget-color="green" class="set-widget-color" href="#">Green</a></li>
+                      <li><a data-widget-color="orange" class="set-widget-color" href="#">Orange</a></li>
+                      <li><a data-widget-color="purple" class="set-widget-color" href="#">Purple</a></li>
+                    </ul>
+                  </div>
+                  <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
+                  <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
+                  <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
+                </div>
+                <h3>Drivers Request Pending</h3>
+              </div>
+              <div class="widget-content">
+                <div class="row">
+                <table class="table table-bordered table-hover datatable dataTable" ng-hide="editForm">
+                    <thead>
+                      <tr>
+                        <th>Id</th>
+                        <th ng-click="sortData('firstName')">First Name
+                          <div ng-class="getSortClass('firstName')"></div>
+                        </th>
+                        <th ng-click="sortData('lastName')">Last Name
+                          <div ng-class="getSortClass('lastName')"></div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Search by particular selected field, need to be work on phone -->
+                     <!--  <tr ng-repeat="request in requests | filter:search| limitTo:rowLimit | orderBy: sortColumn:reverseSort "> -->
+                      <!-- Search by all the fields -->
+                       <tr ng-repeat="pending in pendingDrivers | filter:search| limitTo:rowLimit | orderBy: sortColumn:reverseSort ">
+                        <td>{{$index + 1}}</td>
+                        <td>{{pending.firstName}}</td>
+                        <td>{{pending.lastName}}</td>
+                        </tr>    
+                    </tbody>
+                  </table>
+                  <div class="col-sm-6"><div id="gauge-blue" style="height:90px"></div></div>
+                  <div class="col-sm-6"><div id="gauge-purple" style="height:90px"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="widget widget-orange">
+              <div class="widget-title">
+                <div class="widget-controls">
+                  <a href="" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
+                  <a href="#" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
+                  <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
+                  <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+                    <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
+                      <li class="dropdown-header">Set Widget Color</li>
+                      <li><a data-widget-color="blue" class="set-widget-color" href="#">Blue</a></li>
+                      <li><a data-widget-color="red" class="set-widget-color" href="#">Red</a></li>
+                      <li><a data-widget-color="green" class="set-widget-color" href="#">Green</a></li>
+                      <li><a data-widget-color="orange" class="set-widget-color" href="#">Orange</a></li>
+                      <li><a data-widget-color="purple" class="set-widget-color" href="#">Purple</a></li>
+                    </ul>
+                  </div>
+                  <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
+                  <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
+                  <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
+                </div>
+                <h3>Drivers Cancelled</h3>
+              </div>
+              <div class="widget-content">
+                <div class="row">
+                <table class="table table-bordered table-hover datatable dataTable" ng-hide="editForm">
+                    <thead>
+                      <tr>
+                        <th>Id</th>
+                        <th ng-click="sortData('firstName')">First Name
+                          <div ng-class="getSortClass('firstName')"></div>
+                        </th>
+                        <th ng-click="sortData('lastName')">Last Name
+                          <div ng-class="getSortClass('lastName')"></div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Search by particular selected field, need to be work on phone -->
+                     <!--  <tr ng-repeat="request in requests | filter:search| limitTo:rowLimit | orderBy: sortColumn:reverseSort "> -->
+                      <!-- Search by all the fields -->
+                       <tr ng-repeat="cancelled in cancelledDrivers | filter:search| limitTo:rowLimit | orderBy: sortColumn:reverseSort ">
+                        <td>{{$index + 1}}</td>
+                        <td>{{cancelled.firstName}}</td>
+                        <td>{{cancelled.lastName}}</td>
+                        </tr>    
+                    </tbody>
+                  </table>
+                  <div class="col-sm-6"><div id="gauge-orange" style="height:90px"></div></div>
+                  <div class="col-sm-6"><div id="gauge-yellow" style="height:90px"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Driver details  -->
+
+      <div ng-hide="driverDetails">
+        <legend><h2><b>Driver Details</b></h2></legend>   
+        <table class="table table-hover">
+            <tr>
+                <td colspan="2" bgcolor="#F8F8FF"><h4><b>Driver Personal Information</b></h4></td>
+            </tr>
+            <tr>
+                <td><b>First Name</b></td>
+                <td>{{firstName}}</td>
+            </tr>
+            <tr>
+                <td ><b>Middle Name</b></td>
+                <td >{{middlename}}</td>
+            </tr>
+            <tr>
+                <td ><b>Last Name</b></td>
+                <td >{{lastName}}</td>
+            </tr>
+            <tr>
+                <td ><b>Email</b></td>
+                <td>{{email}}</td>
+            </tr>
+            <tr>
+                <td ><b>Phone NO</b></td>
+                <td>{{phone | tel}}</td>
+            </tr>
+            <tr>
+                <td ><b>Address</b></td>
+                <td>{{address}}</td>
+            </tr>
+            <tr>
+                <td ><b>City</b></td>
+                <td>{{city}}</td>
+            </tr>
+            <tr>
+                <td ><b>State</b></td>
+                <td>{{state}}</td>
+            </tr>
+            <tr>
+                <td ><b>Zip</b></td>
+                <td>{{zip}}</td>
+            </tr>
+            <tr>
+                <td><b>Driver Image</b></td>
+                <td><a href="{{driverPicture}}"><img ng-src="{{driverPicture}}" alt="Description" class="img-thumbnail" width="10%" /></td>
+            </tr>
+             <tr>
+              <td colspan="2" bgcolor="#F8F8FF"><h4><b>Licence Details</b></h4></td>
+            </tr>
+            <tr>
+                <td ><b>Licence N0</b></td>
+                <td>{{licenceN0}}</td>
+            </tr>
+            <tr>
+                <td ><b>Licence Expiry Month</b></td>
+                <td>{{expiryMonth}}</td>
+            </tr>
+             <tr>
+                <td ><b>licence Ecpiry Year</b></td>
+                <td>{{ecpiryYear}}</td>
+            </tr>
+            <tr>
+              <td colspan="2" bgcolor="#F8F8FF"><h4><b>Vehicle Details</b></h4></td>
+            </tr>
+             <tr>
+                <td ><b>Vehicle No</b></td>
+                <td>{{vehicleNo}}</td>
+            </tr>
+             <tr>
+                <td ><b>vehicle Model</td>
+                <td>{{vehicleModel}}</td>
+            </tr>
+             <tr>
+                <td ><b>Vehicle Color</b></td>
+                <td>{{vehicleColor}}</td>
+            </tr>
+             <tr>
+                <td><b>Insurance Docs</b></td>
+                <td><a href="{{insuranceDocument}} "> Insurance Document </td>
+            </tr>
+            <tr>
+              <td> </td>
+              <td>  
+                <button class="btn btn-primary" ng-click= "accept()" >Accept</button> <t></t>
+                <button class="btn btn-primary" ng-click="decline()">Decline</button>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+        </table>
+      </div>
+    </div>
+</div>
+

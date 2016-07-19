@@ -10,6 +10,9 @@ tr{
 }
 </style>
 <!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?&libraries=places&callback=initAutocomplete" async defer></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
 <div class="all-wrapper fixed-header left-menu">
   <div ng-include="'templates/header.html'"></div>
   <div ng-include="'templates/left-sidebar.html'"></div>
@@ -37,31 +40,13 @@ tr{
                 <span style="color:red"  ng-show="driverForm.last_name.$touched && driverForm.last_name.$invalid">Last name is required.</span>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-4 control-label">
-                <label>Email</label>
-                <input name="email" type = "email" placeholder="E-Mail Address" class="form-control"  ng-model ="details.email" required>
-                <!--email validationd display-->
-                <span style="color:red" ng-show="driverForm.email.$dirty && driverForm.email.$invalid">
-                <span ng-show="driverForm.email.$error.required">Email is required.</span>
-                <span ng-show="driverForm.email.$error.email">Invalid email address.</span>
-            </span>
-             </div>
-              <div class="col-md-4 control-label">
-                <label>Phone No</label>
-                <input name="phone" placeholder="(845)555-1212" class="form-control" ng-model ="details.phone" type="number" ng-pattern="/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/" required>
-                <!--Phone number validation display-->
-                <span style="color:red" ng-show="driverForm.phone.$dirty && driverForm.phone.$invalid">
-                  <span ng-show="driverForm.phone.$error.required">Phone Number is required.</span>
-                  <span ng-show="driverForm.phone.$error.pattern">Invalid Phone Number</span>
-                </span>
-              </div>
-              <div class="col-md-4 control-label">
-                <label>Address</label>
-                <input name="address" placeholder="street name" class="form-control"  ng-model ="details.address" type="text" required>
-                <span style="color:red"  ng-show="driverForm.address.$touched && driverForm.address.$invalid">Address is required.</span>
-              </div>
-            </div>
+              <div class="row">
+                <div class="col-md-4 control-label">
+                  <label>Address</label>
+                  <input name="address" placeholder="street name" class="form-control"  ng-model ="details.address" type="text" required>
+                  <span style="color:red"  ng-show="driverForm.address.$touched && driverForm.address.$invalid">Address is required.</span>
+                </div>
+              </div>  
             <div class="row">
               <div class="col-md-4 control-label">
                 <label>City</label>
@@ -132,11 +117,32 @@ tr{
                 <span style="color:red"  ng-show="driverForm.Zip.$touched && driverForm.Zip.$invalid">Zip is required.</span>
               </div>
             </div>
+             <div class="row">
+              <div class="col-md-4 control-label">
+                <label>Email</label>
+                <input name="email" type = "email" placeholder="E-Mail Address" class="form-control"  ng-model ="details.email" required>
+                <!--email validationd display-->
+                <span style="color:red" ng-show="driverForm.email.$dirty && driverForm.email.$invalid">
+                  <span ng-show="driverForm.email.$error.required">Email is required.</span>
+                  <span ng-show="driverForm.email.$error.email">Invalid email address.</span>
+                </span>
+              </div>
+              <div class="col-md-4 control-label">
+                <label>Phone No</label>
+                <input name="phone" placeholder="(845)555-1212" class="form-control" ng-model ="details.phone" type="number" ng-pattern="/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/" required>
+                <!--Phone number validation display-->
+                <span style="color:red" ng-show="driverForm.phone.$dirty && driverForm.phone.$invalid">
+                  <span ng-show="driverForm.phone.$error.required">Phone Number is required.</span>
+                  <span ng-show="driverForm.phone.$error.pattern">Invalid Phone Number</span>
+                </span>
+              </div>
+            </div>
             <div class="row">             
               <div class="col-md-4 control-label"> 
                 <label for="exampleInputFile">Choose your profile picture</label>
-                  <input type="file" class="form-control-file" id="exampleInputFile"class="form-control" ngf-select ng-model="files"  name="file" >
+                  <input type="file" class="form-control-file" id="exampleInputFile"class="form-control" ngf-select ng-model="files"  name="file" accept="image/*"  required/>
                   <!-- <small class="text-muted">Choose your profile picture.</small> ng-model="details.photo"-->
+                  <progress value="0" max="100" id="uploader.profilepicture"> 0% </progress>
               </div>
             </div>
             <br>
@@ -194,7 +200,8 @@ tr{
             <div class="row"> 
               <div class="col-md-4 control-label"> 
                 <label for="exampleInputFile">Insurance Documents</label>
-                  <input type="file" class="form-control-file" id="exampleInputFile"class="form-control" ng-model="details.insuranceDoc" multiple>
+                  <input type="file" value="upload" class="form-control-file" id="insDocumentButton" class="form-control" ng-model="details.insuranceDoc" required>
+                  <progress value="0" max="100" id="insuranceuploader"> 0% </progress>
                   <!-- <small class="text-muted">Choose your profile picture.</small> -->
               </div>
             </div>
@@ -208,6 +215,9 @@ tr{
 <!-- <div ng-include="'templates/footer.html'" ng-cloak></div> -->
 
   </div>
+
+  <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+  <!-- <script src="dist/firebase-file-uploader.min.js"></script> -->
 
   
 

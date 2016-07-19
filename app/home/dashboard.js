@@ -10,12 +10,12 @@ angular.module('myApp.dashboard', ['ngRoute','firebase'])
 }])
 
 .controller('DashboardCtrl', ['$scope','$location','LoginService','$firebase', function($scope,$location,LoginService,$firebase) {
+    $scope.sideMenu = sessionStorage.sideMenu;
+    console.log("hideMenu in dashboard "+ $scope.sideMenu);
 	$scope.username = LoginService.getUser();
 	if(!$scope.username){
 		$location.path('/login');
 	}
-
-
 	/*var firebaseObj = new Firebase("https://x-press-yeti.firebaseio.com/articles");
 	var sync = $firebase(firebaseObj.startAt($scope.username).endAt($scope.username));
 	$scope.articles = sync.$asArray();*/
@@ -23,6 +23,19 @@ angular.module('myApp.dashboard', ['ngRoute','firebase'])
     var firebaseObj = new Firebase("https://x-press-yeti.firebaseio.com/delivery_request");
     var sync = $firebase(firebaseObj.startAt($scope.username).endAt($scope.username));
     $scope.requests = sync.$asArray();
+
+    $scope.successOrErrorMessage = '';
+    $scope.location = $location;
+    $scope.$watch('location.search()', function() {     
+    if(($location.search()).msg == "pfailed") 
+      $scope.successOrErrorMessage = "Your Payment has Failed, Please try it again";
+       if(($location.search()).msg == "psuccess") {
+        $scope.successOrErrorMessage ="Successfully Requested";
+        
+       }
+       
+    }, true);
+
 
 	$scope.editPost = function(id) {
 

@@ -1,4 +1,4 @@
-var app = angular.module('myApp.enum',[]);
+var app = angular.module('myApp.status',[]);
 app.constant('Constants', {
     Status: {
         pending: 'pending',

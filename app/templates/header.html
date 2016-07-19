@@ -8,7 +8,7 @@
     <div class="top-search-w pull-right">
       <input type="text" class="top-search" placeholder="Search"/>
     </div>
-    <div class="dropdown hidden-sm hidden-xs">
+    <div class="dropdown hidden-sm hidden-xs" ng-if="sideMenu">
       <a href="#deliveryRequest" class="header-link">Send Delivery Request </a>
     </div>
    <!--  <div class="dropdown hidden-sm hidden-xs">
@@ -20,21 +20,20 @@
         <li><a href=""><span class="label label-warning">15 min</span> <i class="fa fa-smile-o"></i> User Signed Up</a></li>
       </ul>
     </div> -->
-
     <div class="dropdown">
       <a href="" class="header-link clearfix" data-toggle="dropdown">
-        <div class="avatar">
-          <img src="html/assets/images/avatar-small.jpg" alt="">
+        <div class="avatar" ng-controller = "headerCtrl">
+          <img src=" {{profilePictureURL}}"  alt="">
         </div>
-        <div class="user-name-w">
-          {{username}} <i class="fa fa-caret-down"></i>
+        <div class="user-name-w"  >
+          {{username}}<i class="fa fa-caret-down"></i>
           
         </div>
       </a>
       <ul class="dropdown-menu dropdown-inbar">
        <!--  <li><a href="#"><span class="label label-warning">2</span> <i class="fa fa-envelope"></i> Messages</a></li>
         <li><a href="#"><span class="label label-warning">4</span> <i class="fa fa-users"></i> Friends</a></li> -->
-        <li><a href="#settings"><i class="fa fa-cog"></i> Account Settings</a></li>
+        <li ng-if="sideMenu"><a href="#settings"><i class="fa fa-cog"></i> Account Settings</a></li>
         <li><a href="" ng-click = "logout()"><i class="fa fa-power-off"></i> Logout</a></li>
        <!--  <li><a href="/logout" onclick = "logout()"><i class="fa fa-power-off"></i> Logout</a></li>  -->
         
@@ -43,7 +42,8 @@
 
   </div>
   <a href="" class="menu-toggler"><i class="fa fa-bars"></i></a>
-  <h1><a href="#home">Xpress Dashboard</a></h1>
+  <h1 ng-if="hideSideMen === 'undefined'"><a href="#home">Xpress Dashboard</a></h1>
+  <h1 ng-if="hideSideMenu != 'false'">Xpress Dashboard</h1>
 </div> 
 <script>
   function logout(){

@@ -17,7 +17,17 @@ angular.module('myApp', [
   'myApp.settings',
   'myApp.geographicLocation',
   'myApp.paymentBrainTree',
-  'myApp.adminPannel'
+  'myApp.adminPannel',
+  'myApp.driverInfo',
+  'myApp.roles',
+  'myApp.driverRegistration',
+  'myApp.fileUpload',
+  'myApp.adminDeliveryRequests',
+  'myApp.adminSettings',
+  'myApp.header',
+
+
+
   /*'myApp.geographicLocation'*/
 
 ]).

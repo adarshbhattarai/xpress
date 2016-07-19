@@ -37,8 +37,8 @@ $(function() {
 
 
 
-  /*// Make table action buttons working
-  $('.remove-tr').on('click', function(){
+  // Make table action buttons working
+/*  $('.remove-tr').on('click', function(){
     $row = $(this).closest('tr');
     $row.addClass('danger');
     setTimeout(function(){ $row.remove(); }, 300);
@@ -86,11 +86,11 @@ $(function() {
       $(el).colpickHide();
     }
   });*/
-/*  $("[data-toggle='tooltip']").tooltip();
+  $("[data-toggle='tooltip']").tooltip();
   $('.widget-control-remove').on("click", function() {
     $(this).closest('.widget').slideUp("fast");
     return false;
-  });*/
+  });
   $('.widget-control-minimize').on("click", function() {
     $elem = $(this)
     if($elem.closest('.widget').hasClass('widget-title-minimized')){

@@ -1,0 +1,27 @@
+ <script src="html/assets/js/application.js"></script>
+ <div class="page-header">
+    <div class="header-links hidden-xs">
+      <div class="top-search-w pull-right">
+        <input type="text" class="top-search" placeholder="Search" ng-model="searchText"/>
+      </div>
+      <div class="dropdown">
+        <a href="" class="header-link clearfix" data-toggle="dropdown">
+          <div class="avatar">
+            <img src="html/assets/images/avatar-small.jpg" alt="">
+          </div>
+          <div class="user-name-w">
+            {{username}} <i class="fa fa-caret-down"></i>
+          
+          </div>
+        </a>
+        <ul class="dropdown-menu dropdown-inbar">
+        <!--  <li><a href="#"><span class="label label-warning">2</span> <i class="fa fa-envelope"></i> Messages</a></li>
+        <li><a href="#"><span class="label label-warning">4</span> <i class="fa fa-users"></i> Friends</a></li> -->
+          <li><a href="#adminSetting"><i class="fa fa-cog"></i> Account Settings</a></li>
+          <li><a href="" ng-click = "logout()"><i class="fa fa-power-off"></i> Logout</a></li>
+        </ul>
+      </div>
+    </div>
+    <a href="" class="menu-toggler"><i class="fa fa-bars"></i></a>
+    <h1><a href="#adminPannel">Xpress Dashboard</a></h1>
+  </div>

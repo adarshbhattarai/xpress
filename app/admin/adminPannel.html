@@ -1,6 +1,4 @@
-<script src="html/assets/js/application.js"></script>
-<script src="html/assets/js/app.css"></script>
-<script src="delivery_request/map.js"></script>
+<script src="admin/map.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initAutocomplete" async defer></script>
 <style type="text/css">
   th{
@@ -11,50 +9,162 @@
   <!-- <div ng-include="'templates/header.html'"></div> -->
   <!-- <div ng-include="'templates/left-sidebar.html'"></div> -->
   <!-- Header -->
-  <div class="page-header">
-    <div class="header-links hidden-xs">
-      <div class="top-search-w pull-right">
-        <input type="text" class="top-search" placeholder="Search" ng-model="searchText"/>
-      </div>
-      <div class="dropdown">
-        <a href="" class="header-link clearfix" data-toggle="dropdown">
-          <div class="avatar">
-            <img src="html/assets/images/avatar-small.jpg" alt="">
-          </div>
-          <div class="user-name-w">
-            {{username}} <i class="fa fa-caret-down"></i>
-          
-          </div>
-        </a>
-        <ul class="dropdown-menu dropdown-inbar">
-        <!--  <li><a href="#"><span class="label label-warning">2</span> <i class="fa fa-envelope"></i> Messages</a></li>
-        <li><a href="#"><span class="label label-warning">4</span> <i class="fa fa-users"></i> Friends</a></li> -->
-          <li><a href="#settings"><i class="fa fa-cog"></i> Account Settings</a></li>
-          <li><a href="" ng-click = "logout()"><i class="fa fa-power-off"></i> Logout</a></li>
-        </ul>
-      </div>
-    </div>
-    <a href="" class="menu-toggler"><i class="fa fa-bars"></i></a>
-    <h1><a href="#adminPannel">Xpress Dashboard</a></h1>
-  </div> 
+  <div ng-include="'admin/AdminTemplate/adminHeader.html'"></div>
   <!-- Sidebar menu -->
-  <div class="side">
-    <div class="sub-sidebar-wrapper">
-      <ul class="nav">
-        <li><a href="#adminPannel">Home</a></li>
-          <!-- <li><a href="#addDetails">Add Details</a></li> -->
-          <!-- <li><a href="#deliveryRequest">Delivery Request</a></li>
-          <li><a href="#driver-information">Register as Driver</a></li> -->
-          <!--<li><a href="#cust_request">Customer Request</a></li> -->
-          <!--  <li><a href="#settings">Manage Preferences</a></li> -->
-          <!--  <li><a href="#driver_response">Driver Response</a></li> -->
-      </ul>
-    </div>
-  </div>
+  <div ng-include="'admin/AdminTemplate/adminSidemenu.html'"></div>
 
   <!-- Main body contents -->
   <div class="main-content">
     <p class="lead">Welcome Admin</p>
+    <!-- delivery details -->
+    <div class="widget widget-green">
+      <span class="offset_anchor" id="stat_charts_anchor"></span>
+      <div class="widget-title">
+        <div class="widget-controls">
+          <a href="" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
+          <a href="" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
+          <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
+          <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+            <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
+              <li class="dropdown-header">Set Widget Color</li>
+              <li><a data-widget-color="blue" class="set-widget-color" href="#">Blue</a></li>
+              <li><a data-widget-color="red" class="set-widget-color" href="#">Red</a></li>
+              <li><a data-widget-color="green" class="set-widget-color" href="#">Green</a></li>
+              <li><a data-widget-color="orange" class="set-widget-color" href="#">Orange</a></li>
+              <li><a data-widget-color="purple" class="set-widget-color" href="#">Purple</a></li>
+            </ul>
+          </div>
+          <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
+          <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
+          <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
+        </div>
+        <h3><i class="fa fa-bar-chart-o"></i>Deliveries Statistics</h3>
+      </div>
+      <div class="widget-content">
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-6 text-center">
+            <div class="widget-content-blue-wrapper changed-up">
+              <div class="widget-content-blue-inner padded">
+                <div class="pre-value-block"><i class="fa fa-dashboard"></i> Total Delivery Request</div>
+                <div class="value-block">
+                  <div class="value-self">{{countNewDelivery}}</div>
+                  <div class="value-sub">Total</div>
+                </div>
+              </div>
+            </div>
+          </div>
+           <div class="col-lg-3 col-md-4 col-sm-6 text-center">
+            <div class="widget-content-blue-wrapper changed-up">
+              <div class="widget-content-blue-inner padded">
+                <div class="pre-value-block"><i class="fa fa-money"></i>Pending Request </div>
+                <div class="value-block">
+                  <div class="value-self">{{pendindgRequestCount}}</div>
+                  <div class="value-sub">Total</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6 text-center">
+            <div class="widget-content-blue-wrapper changed-up">
+              <div class="widget-content-blue-inner padded">
+                <div class="pre-value-block"><i class="fa fa-user"></i> Onroute Deliveries</div>
+                <div class="value-block">
+                  <div class="value-self">{{approvedDeliveriesCount}}</div>
+                  <div class="value-sub">Total</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6 text-center hidden-md">
+            <div class="widget-content-blue-wrapper changed-up">
+              <div class="widget-content-blue-inner padded">
+                <div class="pre-value-block"><i class="fa fa-sign-in"></i> Cancelled deliveries</div>
+                <div class="value-block">
+                  <div class="value-self">{{cancelledDeliveriesCount}}</div>
+                  <div class="value-sub">Total</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- Drivers details -->
+    <div class="widget widget-green">
+      <span class="offset_anchor" id="stat_charts_anchor"></span>
+      <div class="widget-title">
+        <div class="widget-controls">
+          <a href="" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
+          <a href="" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
+          <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
+          <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+            <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
+              <li class="dropdown-header">Set Widget Color</li>
+              <li><a data-widget-color="blue" class="set-widget-color" href="#">Blue</a></li>
+              <li><a data-widget-color="red" class="set-widget-color" href="#">Red</a></li>
+              <li><a data-widget-color="green" class="set-widget-color" href="#">Green</a></li>
+              <li><a data-widget-color="orange" class="set-widget-color" href="#">Orange</a></li>
+              <li><a data-widget-color="purple" class="set-widget-color" href="#">Purple</a></li>
+            </ul>
+          </div>
+          <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
+          <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
+          <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
+        </div>
+        <h3><i class="fa fa-bar-chart-o"></i>Drivers Statistics</h3>
+      </div>
+      <div class="widget-content">
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-6 text-center">
+            <div class="widget-content-blue-wrapper changed-up">
+              <div class="widget-content-blue-inner padded">
+                <div class="pre-value-block"><i class="fa fa-dashboard"></i> Total Driver Request</div>
+                <div class="value-block">
+                  <div class="value-self">{{countDriverRequest}}</div>
+                  <div class="value-sub">Total</div>
+                </div>
+              </div>
+            </div>
+          </div>
+           <div class="col-lg-3 col-md-4 col-sm-6 text-center">
+            <div class="widget-content-blue-wrapper changed-up">
+              <div class="widget-content-blue-inner padded">
+                <div class="pre-value-block"><i class="fa fa-money"></i>Pending Drivers </div>
+                <div class="value-block">
+                  <div class="value-self">{{pendindgDriverCount}}</div>
+                  <div class="value-sub">Total</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6 text-center">
+            <div class="widget-content-blue-wrapper changed-up">
+              <div class="widget-content-blue-inner padded">
+                <div class="pre-value-block"><i class="fa fa-user"></i> Approved Drivers</div>
+                <div class="value-block">
+                  <div class="value-self">{{approvedDriverCount}}</div>
+                  <div class="value-sub">Total</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6 text-center hidden-md">
+            <div class="widget-content-blue-wrapper changed-up">
+              <div class="widget-content-blue-inner padded">
+                <div class="pre-value-block"><i class="fa fa-sign-in"></i> Cancelled Drivers</div>
+                <div class="value-block">
+                  <div class="value-self">{{cancelledDriverCount}}</div>
+                  <div class="value-sub">Total</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google map -->
     <div class="row">
       <div class="widget widget-blue" id="widget_gmaps">
         <div class="widget-title">
@@ -83,6 +193,7 @@
         </div>
       </div>
     </div>
+    
     <!------------User Lists------------>
     <div class="row">
       <div class="widget widget-blue">
@@ -111,18 +222,23 @@
         <div class="table-responsive">
           <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
             <div class="row">
-              <div class="col-sm-12">
+              <div class="col-sm-12" style="padding-top:5px;">
                 <div class="pull-right">
                   <div class="dataTables_filter" id="DataTables_Table_0_filter">
-                    <!-- Search by:
-                    <select ng-model="searchBy">
+                    Search by:<!-- <select ng-model="searchFrom" ng-options="x for x in searchList"></select> -->
+                      <select ng-model="searchBy">
                           <option value="firstName" selected="selected">First Name</option>
                           <option value="lastName">Last name</option>
                           <option value="phone">Phone</option>
+                          <option value="address">Address</option>
+                          <option value="city">City</option>
+                          <option value="state">State</option>
+                          <option value="zip">Zip</option>
                           <option value="email">Email</option>
-                        </select> -->
+                        </select>
                     <label>
-                      <input type="text" aria-controls="DataTables_Table_0" placeholder="Search" ng-model="searchText" class="form-control input-sm">
+                      <input type="text" aria-controls="DataTables_Table_0" placeholder="Search by {{searchBy}}" ng-model="searchText" class="form-control input-sm" style="margin-left: 10px;">
+                      <input type="checkbox" ng-model="exactMatch" />Exact Match
                     </label>
                   </div>
                 </div>
@@ -130,6 +246,7 @@
                   <div id="DataTables_Table_0_length" class="dataTables_length">
                     <label>Show 
                         <select ng-model="rowLimit">
+                          <option value="5">5</option>
                           <option value="10">10</option>
                           <option value="25">25</option>
                           <option value="50">50</option>
@@ -140,36 +257,10 @@
                 </div>
                 <div class="clearfix"></div>
               </div>
-              <!-- <table class="table table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-                <thead>
-                  <tr role="row">
-                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="ID: activate to sort column ascending" style="width: 54px;">ID
-                    </th>
-                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 289px;">Customer Name
-                    </th>
-                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Country: activate to sort column ascending" style="width: 240px;">Country
-                    </th>
-                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Balance: activate to sort column ascending" style="width: 151px;">Balance
-                    </th>
-                    <th class="sorting_disabled" role="columnheader" rowspan="1" colspan="1" aria-label="" style="width: 77px;"></th>
-                  </tr>
-                </thead>
-                
-                <tbody role="alert" aria-live="polite" aria-relevant="all">
-                  <tr class="odd">
-                    <td class=" ">1</td>
-                      <td class=" ">Mario Speedwagon</td>
-                      <td class=" ">Brazil</td>
-                      <td class="text-right ">$25.94</td>
-                      <td class="text-right ">
-                        <a href="#" class="btn btn-danger btn-xs remove-tr"><i class="fa fa-times"></i></a>
-                      </td>
-                  </tr>
-                </tbody>
-              </table> -->
-              <table class="table table-bordered table-hover datatable dataTable" ng-hide="editForm">
+              <table id="myTable" class="table table-bordered table-hover datatable dataTable" ng-hide="editForm">
                 <thead>
                   <tr>
+                    <th>Id</th>
                     <th ng-click="sortData('firstName')">First Name
                       <div ng-class="getSortClass('firstName')"></div>
                     </th>
@@ -198,11 +289,15 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr ng-repeat="request in requests | filter:search | limitTo:rowLimit | orderBy: sortColumn:reverseSort ">
+                <!-- Search by particular selected field, need to be work on phone -->
+                 <!--  <tr ng-repeat="request in requests | filter:search| limitTo:rowLimit | orderBy: sortColumn:reverseSort "> -->
+                  <!-- Search by all the fields -->
+                   <tr dir-paginate="request in requests | filter:search:exactMatch |itemsPerPage:rowLimit| limitTo:rowLimit | orderBy: sortColumn:reverseSort ">
+                   <td>{{$index + 1}}</td>
                     <td>{{request.firstName}}</td>
                     <td>{{request.lastName}}</td>
                     <td>{{request.email}}</td>
-                    <td>{{request.phone}}</td>
+                    <td>{{request.phone | tel}}</td>
                     <td>{{request.address}}</td>
                     <td>{{request.city}}</td>
                     <td>{{request.state}}</td>
@@ -214,11 +309,8 @@
               </table>
               <div class="row">
                 <div class="col-sm-12">
-                  <div class="pull-left">
-                    <div class="dataTables_info"  style="margin-top: 18px;">Showing 1 to {{rowLimit}} of 100 entries</div>
-                  </div>
                   <div class="pull-right">
-                    <div class="dataTables_paginate paging_bootstrap">
+                    <!-- <div class="dataTables_paginate paging_bootstrap">
                       <ul class="pagination pagination-sm">
                         <li class="prev disabled">
                           <a href=""><i class="fa fa-double-angle-left"></i> Previous</a>
@@ -230,7 +322,13 @@
                         <li><a href="">5</a></li>
                         <li class="next"><a href="">Next <i class="fa fa-double-angle-right"></i></a></li>
                       </ul>
-                    </div>
+                    
+                    </div> -->
+                      <dir-pagination-controls
+                         max-size="5"
+                         direction-links="true"
+                         boundary-links="true" >
+                      </dir-pagination-controls>
                   </div>
                   <div class="clearfix"></div>
                 </div>
@@ -408,141 +506,10 @@
           </div>
         </fieldset>
       </form>
-    </div>
-    <!-- delivery things status -->
-    <div class="row">
-      <div class="col-md-4">
-        <div class="widget widget-purple">
-          <div class="widget-title">
-            <div class="widget-controls">
-              <a href="#" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
-              <a href="" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
-              <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
-              <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
-                <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
-                  <li class="dropdown-header">Set Widget Color</li>
-                  <li><a data-widget-color="blue" class="set-widget-color" href="#">Blue</a></li>
-                  <li><a data-widget-color="red" class="set-widget-color" href="#">Red</a></li>
-                  <li><a data-widget-color="green" class="set-widget-color" href="#">Green</a></li>
-                  <li><a data-widget-color="orange" class="set-widget-color" href="#">Orange</a></li>
-                  <li><a data-widget-color="purple" class="set-widget-color" href="#">Purple</a></li>
-                </ul>
-              </div>
-              <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
-              <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
-              <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
-            </div>
-            <h3>Request Pending</h3>
-          </div>
-          <div class="widget-content">
-            <div class="row">
-              <div class="col-sm-6"><div id="gauge-red" style="height:90px"></div></div>
-              <div class="col-sm-6"><div id="gauge-green" style="height:90px"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="widget widget-green">
-          <div class="widget-title">
-            <div class="widget-controls">
-              <a href="" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
-              <a href="" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
-              <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
-              <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
-                <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
-                  <li class="dropdown-header">Set Widget Color</li>
-                  <li><a data-widget-color="blue" class="set-widget-color" href="#">Blue</a></li>
-                  <li><a data-widget-color="red" class="set-widget-color" href="#">Red</a></li>
-                  <li><a data-widget-color="green" class="set-widget-color" href="#">Green</a></li>
-                  <li><a data-widget-color="orange" class="set-widget-color" href="#">Orange</a></li>
-                  <li><a data-widget-color="purple" class="set-widget-color" href="#">Purple</a></li>
-                </ul>
-              </div>
-              <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
-              <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
-              <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
-            </div>
-            <h3>Request Onroute</h3>
-          </div>
-          <div class="widget-content">
-            <div class="row">
-              <div class="col-sm-6"><div id="gauge-blue" style="height:90px"></div></div>
-              <div class="col-sm-6"><div id="gauge-purple" style="height:90px"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="widget widget-orange">
-          <div class="widget-title">
-            <div class="widget-controls">
-              <a href="" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
-              <a href="#" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
-              <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
-              <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
-                <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
-                  <li class="dropdown-header">Set Widget Color</li>
-                  <li><a data-widget-color="blue" class="set-widget-color" href="#">Blue</a></li>
-                  <li><a data-widget-color="red" class="set-widget-color" href="#">Red</a></li>
-                  <li><a data-widget-color="green" class="set-widget-color" href="#">Green</a></li>
-                  <li><a data-widget-color="orange" class="set-widget-color" href="#">Orange</a></li>
-                  <li><a data-widget-color="purple" class="set-widget-color" href="#">Purple</a></li>
-                </ul>
-              </div>
-              <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
-              <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
-              <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
-            </div>
-            <h3>Request Delivered</h3>
-          </div>
-          <div class="widget-content">
-            <div class="row">
-              <div class="col-sm-6"><div id="gauge-orange" style="height:90px"></div></div>
-              <div class="col-sm-6"><div id="gauge-yellow" style="height:90px"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </div>   
   </div>
 </div>
-<!-- for admin pannel -->
-<!-- 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script src='assets/js/plugins/jquery.pnotify.js'></script>
-<script src='assets/js/plugins/jquery.sparkline.min.js'></script>
-<script src='assets/js/plugins/mwheelIntent.js'></script>
-<script src='assets/js/plugins/mousewheel.js'></script>
-<script src='assets/js/bootstrap/tab.js'></script>
-<script src='assets/js/bootstrap/dropdown.js'></script>
-<script src='assets/js/bootstrap/tooltip.js'></script>
-<script src='assets/js/bootstrap/collapse.js'></script>
-<script src='assets/js/bootstrap/scrollspy.js'></script>
-<script src='assets/js/plugins/bootstrap-datepicker.js'></script>
-<script src='assets/js/bootstrap/transition.js'></script>
-<script src='assets/js/plugins/jquery.knob.js'></script>
-<script src='assets/js/plugins/jquery.flot.min.js'></script>
-<script src='assets/js/plugins/fullcalendar.js'></script>
-<script src='html/assets/js/plugins/datatables/datatables.min.js'></script>
-<script src='assets/js/plugins/chosen.jquery.min.js'></script>
-<script src='assets/js/plugins/jquery.timepicker.min.js'></script>
-<script src='assets/js/plugins/daterangepicker.js'></script>
-<script src='html/assets/js/plugins/colpick.js'></script>
-<script src='assets/js/plugins/moment.min.js'></script>
-<script src='html/assets/js/plugins/datatables/bootstrap.datatables.js'></script>
-<script src='html/assets/js/bootstrap/modal.js'></script>
-<script src='assets/js/plugins/raphael-min.js'></script>
-<script src='assets/js/plugins/morris-0.4.3.min.js'></script>
-<script src='assets/js/plugins/justgage.1.0.1.min.js'></script>
-<script src='assets/js/plugins/jquery.maskedinput.min.js'></script>
-<script src='assets/js/plugins/jquery.maskmoney.js'></script>
-<script src='assets/js/plugins/summernote.js'></script>
-<script src='html/assets/js/plugins/dropzone-amd-module.js'></script>
-<script src='assets/js/plugins/jquery.validate.min.js'></script>
-<script src='html/assets/js/plugins/jquery.bootstrap.wizard.min.js'></script>
-<script src='assets/js/plugins/jscrollpane.min.js'></script>
-<script src='assets/js/application.js'></script>
 
-<script src='assets/js/template_js/dashboard.js'></script> -->
+<!-- <script src='html/assets/js/plugins/datatables/datatables.min.js'></script>
+<script src='html/assets/js/plugins/datatables/bootstrap.datatables.js'></script>
+<script src='html/assets/js/template_js/table.js'></script> -->

@@ -1,6 +1,6 @@
  var mapPlace, map;
 
- function myPrivateListener() {
+ function myDestinationListner() {
           var place= destinationBox.getPlace();
           var address = place.formatted_address;
 
@@ -13,14 +13,7 @@ geocoder.geocode( { 'address': address}, function(results, status) {
     var longitude = results[0].geometry.location.lng();
 
     var googleLatLngDestination = new google.maps.LatLng(latitude,longitude);
-    
-    var mapOption = {
-        zoom: 10,
-        center: googleLatLngDestination,
-        mapTypedId: google.maps.MapTypeId.ROAD
-    }
-    
-    addMarker(map, googleLatLngDestination, "destination Location");
+    addMarker(map, googleLatLngDestination, "destination Location", 'red');
   } 
 }); 
     }
@@ -39,13 +32,13 @@ geocoder.geocode( { 'address': address}, function(results, status) {
 
     var googleLatLngDestination = new google.maps.LatLng(latitude,longitude);
     
-    var mapOption = {
+   /* var mapOption = {
         zoom: 10,
         center: googleLatLngDestination,
         mapTypedId: google.maps.MapTypeId.ROAD
-    }
+    }*/
     
-    addMarker(map, googleLatLngDestination, "package Location");
+    addMarker(map, googleLatLngDestination, "package Location",'green');
   } 
 }); 
     }
@@ -59,11 +52,12 @@ function initAutocomplete() {
     //for destination address
     var output = document.getElementById('destination');
     destinationBox = new google.maps.places.Autocomplete(output);
-    destinationBox.addListener('place_changed',myPrivateListener);
+    destinationBox.addListener('place_changed',myDestinationListner);
 }
 
 
 $(document).ready(function(){
+    console.log("map here");
     if(navigator.geolocation)
         navigator.geolocation.getCurrentPosition(success,fail);
         else
@@ -85,18 +79,20 @@ function success(position){
     
     <!-- Google map display -->
     map = new google.maps.Map(mapPlace, mapOption);
-    
-    addMarker(map, googleLatalng, "Current Location");
+      
+    addMarker(map, googleLatalng, "Current Location",'blue');
    /* $("p").html("Latitude: "+ position.coords.latitude + "<br>Longitude: "+ position.coords.longitude +
                 "<br>Accuracy: "+ position.coords.accuracy);*/
 
 }
 
-function addMarker(map, googleLatalng, title){
+function addMarker(map, googleLatalng, title,color){
     var markerOption = {
         position: googleLatalng,
         map : map,
         title: title,
+        icon: 'https://maps.google.com/mapfiles/ms/icons/'+color+'-dot.png',
+        /*icon: 'http://maps.google.com/mapfiles/ms/micons/convienancestore.png',*/
         animation: google.maps.Animation.DROP
     };
     var marker = new google.maps.Marker(markerOption);

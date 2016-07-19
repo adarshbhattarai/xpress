@@ -1,0 +1,378 @@
+<script src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initAutocomplete" async defer></script>
+<style type="text/css">
+  th{
+    cursor: pointer;
+  }
+</style>
+<div class="all-wrapper fixed-header left-menu">
+  <div ng-include="'admin/AdminTemplate/adminHeader.html'"></div>
+  <div ng-include="'admin/AdminTemplate/adminSidemenu.html'"></div>
+  
+  <div class="main-content">
+
+    <!--New Requests from Drivers list -->
+  	<div class="row">
+      <div class="widget widget-blue">
+        <div class="widget-title">
+          <div class="widget-controls">
+            <a href="" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
+            <a href="" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
+            <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
+            <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+              <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
+                <li class="dropdown-header">Set Widget Color</li>
+                <li><a data-widget-color="blue" class="set-widget-color" href="">Blue</a></li>
+                <li><a data-widget-color="red" class="set-widget-color" href="">Red</a></li>
+                <li><a data-widget-color="green" class="set-widget-color" href="">Green</a></li>
+                <li><a data-widget-color="orange" class="set-widget-color" href="">Orange</a></li>
+                <li><a data-widget-color="purple" class="set-widget-color" href="">Purple</a></li>
+              </ul>
+            </div>
+            <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
+            <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
+            <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
+          </div>
+          <h3><i class="fa fa-table"></i>New Delivery requests</h3>
+        </div>
+        <div class="widget-content no-padding">
+          <div class="table-responsive">
+            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
+              <div class="row">
+                <div class="col-sm-12" style="padding-top:5px;">
+                  <div class="pull-right">
+                    <div class="dataTables_filter" id="DataTables_Table_0_filter">
+                      Search by:
+                      <select ng-model="searchBy">
+                        <option value="user" selected="selected">User</option>
+                        <option value="fullName">Receipient Name</option>
+                        <option value="phone">Receipient Phone</option>
+                      </select>
+                      <label>
+                        <input type="text" aria-controls="DataTables_Table_0" placeholder="Search by {{searchBy}}" ng-model="searchDriverList" class="form-control input-sm" style="margin-left: 10px;">
+                        <input type="checkbox" ng-model="exactmatch" />Exact Match
+                      </label>
+                    </div>
+                  </div>
+                        <div class="pull-left">
+                          <div id="DataTables_Table_0_length" class="dataTables_length">
+                            <label>Show 
+                                <select ng-model="newDeliveryRowLimit">
+                                  <option value="5">5</option>
+                                  <option value="10">10</option>
+                                  <option value="25">25</option>
+                                  <option value="50">50</option>
+                                  <option value="100">100</option>
+                                </select>
+                                Rows</label>
+                          </div>
+                        </div>
+                        <div class="clearfix"></div>
+                </div>  
+                <table class="table table-bordered table-hover datatable dataTable" ng-hide="editForm">
+                  <thead>
+                    <tr>
+                            <th>Id</th>
+                            <th ng-click="sortData('date')">Date
+                              <div ng-class="getSortClass('date')"></div></th>
+                            <th ng-click="sortData('email')">User
+                              <div ng-class="getSortClass('email')"></div></th>
+                            <th ng-click="sortData('firstName')">Receipient Name
+                              <div ng-class="getSortClass('fullName')"></div>
+                            </th>
+                            <th ng-click="sortData('phone')">Receipient Phone
+                              <div ng-class="getSortClass('phone')"></div>
+                            </th>                            
+                            <th ng-click="sortData('address')">Package Address
+                              <div ng-class="getSortClass('address')"></div>
+                            </th>
+                            <th ng-click="sortData('address')">Destination Address
+                            <div ng-class="getSortClass('address')"></div>
+                            </th>
+                            <th ng-click="sortData('box')">Number of Box
+                            <div ng-class="getSortClass('box')"></div>
+                            </th>
+                            <th >Pictures</th>
+                            <th>Current Status</th>
+                            <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr dir-paginate="request in requests | filter:searchFromDriverList |itemsPerPage:newDeliveryRowLimit| orderBy: sortColumn:reverseSort ">
+                      <td>{{$index + 1}}</td>
+                      <td>{{request.date | date}}</td>
+                      <td>{{request.user}}</td>
+                      <td>{{request.fullName}}</td>
+                      <td>{{request.phone | tel}}</td>
+                      <td>{{request.address}}</td>
+                      <td>{{request.destinationAddress}}</td>
+                      <td>{{request.noOfBox}}</td>
+                      <td><a href="{{request.picture}}"><img ng-src="{{request.picture}}" alt="Description"  width="20%" /></td>
+                      <td>{{request.status}}</td>
+                      <td>
+                        <select name="status" class="form-control selectpicker" ng-change="statusChange(this, request)" ng-model ="status" required>
+                          <option value="">CHANGE STATUS</option>
+                          <option value="APPROVED">Approve Item</option>
+                          <option value="CANCEL">Cancel Item</option>
+                        </select>
+                      </td>
+                      <!--  <td><a href="" ng-click="update(request)" ><span class="glyphicon glyphicon-edit"></span></a></td>
+                            <td><a href="" ng-click="deletePost(request)"><span class="glyphicon glyphicon-remove"></span></a></td> -->
+                    </tr>    
+                  </tbody>
+                </table>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="pull-right">
+                      <dir-pagination-controls
+                         max-size="5"
+                         direction-links="true"
+                         boundary-links="true" >
+                      </dir-pagination-controls>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- approved Deliveries list -->
+    <div class="row">
+      <div class="widget widget-blue">
+        <div class="widget-title">
+          <div class="widget-controls">
+            <a href="" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
+            <a href="" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
+            <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
+            <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+              <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
+                <li class="dropdown-header">Set Widget Color</li>
+                <li><a data-widget-color="blue" class="set-widget-color" href="">Blue</a></li>
+                <li><a data-widget-color="red" class="set-widget-color" href="">Red</a></li>
+                <li><a data-widget-color="green" class="set-widget-color" href="">Green</a></li>
+                <li><a data-widget-color="orange" class="set-widget-color" href="">Orange</a></li>
+                <li><a data-widget-color="purple" class="set-widget-color" href="">Purple</a></li>
+              </ul>
+            </div>
+            <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
+            <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
+            <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
+          </div>
+          <h3><i class="fa fa-table"></i>Approved Deliveries</h3>
+        </div>
+        <div class="widget-content no-padding">
+          <div class="table-responsive">
+            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
+              <div class="row">
+                <div class="col-sm-12" style="padding-top:5px;">
+                  <div class="pull-right">
+                    <div class="dataTables_filter" id="DataTables_Table_0_filter">
+                      Search by:<!-- <select ng-model="searchFrom" ng-options="x for x in searchList"></select> -->
+                      <select ng-model="searchBy">
+                        <option value="user">User</option>
+                        <option value="fullName" selected="selected">Receipient name</option>
+                        <option value="phone">Phone</option>                        
+                      </select>
+                      <label>
+                        <input type="text" aria-controls="DataTables_Table_0" placeholder="Search by {{searchBy}}" ng-model="searchApprovedDeliveries" class="form-control input-sm" style="margin-left: 10px;">
+                        <input type="checkbox" ng-model="exactmatch" />Exact Match
+                      </label>
+                    </div>
+                  </div>
+                  <div class="pull-left">
+                    <div id="DataTables_Table_0_length" class="dataTables_length">
+                      <label>Show 
+                        <select ng-model="approvedDeliveryRowLimit">
+                          <option value="5">5</option>
+                          <option value="10">10</option>
+                          <option value="25">25</option>
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                        </select>
+                        Rows
+                      </label>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>     
+                <table class="table table-bordered table-hover datatable dataTable" ng-hide="editForm">
+                  <thead>
+                          <tr>
+                            <th>Id</th>
+                             <th ng-click="sortData('email')">User
+                              <div ng-class="getSortClass('email')"></div></th>
+                            <th ng-click="sortData('firstName')">Receipient Name
+                              <div ng-class="getSortClass('fullName')"></div>
+                            </th>
+                            <th ng-click="sortData('phone')">Receipient Phone
+                              <div ng-class="getSortClass('phone')"></div>
+                            </th>                            
+                            <th ng-click="sortData('address')">Package Address
+                              <div ng-class="getSortClass('address')"></div>
+                            </th>
+                            <th ng-click="sortData('address')">Destination Address
+                            <div ng-class="getSortClass('address')"></div>
+                            </th>
+                            <th ng-click="sortData('box')">Number of Box
+                            <div ng-class="getSortClass('box')"></div>
+                            </th>
+                            <th>Status</th>
+                          </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Search by particular selected field, need to be work on phone -->
+                    <!--  <tr ng-repeat="request in requests | filter:search| limitTo:rowLimit | orderBy: sortColumn:reverseSort "> -->
+                    <!-- Search by all the fields -->
+                    <tr dir-paginate="accepted in acceptedDeliveries | filter:searchFromApprovedDeliveries:exactmatch|itemsPerPage:approvedDeliveryRowLimit  | orderBy: sortColumn:reverseSort ">
+                      <td>{{$index + 1}}</td>
+                      <td>{{accepted.user}}</td>
+                      <td>{{accepted.fullName}}</td>
+                      <td>{{accepted.phone | tel}}</td>                     
+                      <td>{{accepted.address}}</td>
+                      <td>{{accepted.destinationAddress}}</td>
+                      <td>{{accepted.noOfBox}}</td>
+        			        <td>{{accepted.status}}</td>
+                    </tr>  
+                  </tbody>
+                </table>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="pull-right">
+                      <dir-pagination-controls
+                         max-size="5"
+                         direction-links="true"
+                         boundary-links="true" >
+                      </dir-pagination-controls>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cancelled Deliveries List -->
+    <div class="row">
+      <div class="widget widget-blue">
+        <div class="widget-title">
+          <div class="widget-controls">
+            <a href="" class="widget-control widget-control-full-screen" data-toggle="tooltip" data-placement="top" title="" data-original-title="Full Screen"><i class="fa fa-expand"></i></a>
+            <a href="" class="widget-control widget-control-full-screen widget-control-show-when-full" data-toggle="tooltip" data-placement="left" title="" data-original-title="Exit Full Screen"><i class="fa fa-expand"></i></a>
+            <a href="" data-toggle="dropdown" class="widget-control widget-control-settings"><i class="fa fa-cog"></i></a>
+            <div class="dropdown" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+              <ul class="dropdown-menu dropdown-menu-small" role="menu" aria-labelledby="dropdownMenu1">
+                <li class="dropdown-header">Set Widget Color</li>
+                <li><a data-widget-color="blue" class="set-widget-color" href="">Blue</a></li>
+                <li><a data-widget-color="red" class="set-widget-color" href="">Red</a></li>
+                <li><a data-widget-color="green" class="set-widget-color" href="">Green</a></li>
+                <li><a data-widget-color="orange" class="set-widget-color" href="">Orange</a></li>
+                <li><a data-widget-color="purple" class="set-widget-color" href="">Purple</a></li>
+              </ul>
+            </div>
+            <a href="" class="widget-control widget-control-refresh" data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"><i class="fa fa-refresh"></i></a>
+            <a href="" class="widget-control widget-control-minimize" data-toggle="tooltip" data-placement="top" title="" data-original-title="Minimize"><i class="fa fa-minus-circle"></i></a>
+            <a href="" class="widget-control widget-control-remove" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><i class="fa fa-times-circle"></i></a>
+          </div>
+          <h3><i class="fa fa-table"></i>Cancelled Deliveries</h3>
+        </div>
+        <div class="widget-content no-padding">
+          <div class="table-responsive">
+            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
+              <div class="row">
+                <div class="col-sm-12" style="padding-top:5px;">
+                  <div class="pull-right">
+                    <div class="dataTables_filter" id="DataTables_Table_0_filter">
+                      Search by:<!-- <select ng-model="searchFrom" ng-options="x for x in searchList"></select> -->
+                      <select ng-model="searchBy">
+                        <option value="user" selected="selected">User</option>
+                        <option value="fullName">Receipient Name</option>
+                        <option value="phone">Phone</option>
+                      </select>
+                      <label>
+                        <input type="text" aria-controls="DataTables_Table_0" placeholder="Search by {{searchBy}}" ng-model="searchCancelledDeliveries" class="form-control input-sm" style="margin-left: 10px;">
+                        <input type="checkbox" ng-model="exactmatch" />Exact Match
+                      </label>
+                    </div>
+                  </div>
+                  <div class="pull-left">
+                    <div id="DataTables_Table_0_length" class="dataTables_length">
+                      <label>Show 
+                        <select ng-model="cancelledDeliveryRowLimit">
+                          <option value="5">5</option>
+                          <option value="10">10</option>
+                          <option value="25">25</option>
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                        </select>
+                        Rows
+                      </label>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>              
+                <table class="table table-bordered table-hover datatable dataTable" ng-hide="editForm">
+                  <thead>
+                    <tr>
+                      <th>Id</th>
+                       <th ng-click="sortData('email')">User
+                        <div ng-class="getSortClass('email')"></div>
+                      </th> 
+                      <th ng-click="sortData('firstName')">Receipient Name
+                        <div ng-class="getSortClass('fullName')"></div>
+                      </th>
+                      <th ng-click="sortData('phone')">Receipient Phone
+                        <div ng-class="getSortClass('phone')"></div>
+                      </th>                                  
+                      <th ng-click="sortData('address')">Package Address
+                        <div ng-class="getSortClass('address')"></div>
+                      </th>
+                      <th ng-click="sortData('address')">Destination Address
+                        <div ng-class="getSortClass('address')"></div>
+                      </th>
+                      <th ng-click="sortData('box')">Number of Box
+                        <div ng-class="getSortClass('box')"></div>
+                      </th>
+                      <th>Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr dir-paginate="cancelled in cancelledDeliveries | filter:searchFromCancelledDeliveries:exactmatch|itemsPerPage:cancelledDeliveryRowLimit | orderBy: sortColumn:reverseSort ">
+                      <td>{{$index + 1}}</td>
+                      <td>{{cancelled.user}}</td>
+                      <td>{{cancelled.fullName}}</td>
+                      <td>{{cancelled.phone | tel}}</td>                      
+                      <td>{{cancelled.address}}</td>
+                      <td>{{cancelled.destinationAddress}}</td>
+                      <td>{{cancelled.noOfBox}}</td>
+        			        <td>{{cancelled.status}}</td>
+                    </tr>  
+                  </tbody>
+                </table>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="pull-right">
+                     <dir-pagination-controls
+                         max-size="5"
+                         direction-links="true"
+                         boundary-links="true" >
+                      </dir-pagination-controls>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
