@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('myApp.driverRegistration', ['ngRoute','firebase'])
+angular.module('myApp.driverRegistration', ['ngRoute','firebase','ngNotify'])
 
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/driver-registration', {
@@ -8,7 +8,7 @@ angular.module('myApp.driverRegistration', ['ngRoute','firebase'])
         controller: 'AddDetailsCtrl'
     });
 }])
-.controller('AddDetailsCtrl', ['$scope','$location','$firebase','$window','LoginService', function($scope,$location,$firebase,$window,LoginService) {
+.controller('AddDetailsCtrl', ['ngNotify','$scope','$location','$firebase','$window','LoginService', function(ngNotify,$scope,$location,$firebase,$window,LoginService) {
     $scope.sideMenu = sessionStorage.sideMenu;   
     $scope.username = LoginService.getUser();
       
@@ -144,6 +144,7 @@ angular.module('myApp.driverRegistration', ['ngRoute','firebase'])
         var requestdDate = new Date().getTime();
         console.log(requestdDate);
         console.log("requestdDate for driver");
+       /* console.log("expiry date: "+ expiryDate);*/
 
          fb.$push({
             firstName:firstName,
@@ -169,9 +170,11 @@ angular.module('myApp.driverRegistration', ['ngRoute','firebase'])
         }).then(function(ref){
             console.log(ref); 
             console.log("Saved Successfully");
+            ngNotify.set('Driver registration submitted successfully!!!','success');
             $location.path('/home');       
         },function(error){
             console.log("error: ");
+            ngNotify.set('Error!!! Driver registration not submitted!!!','error');
             console.log(error);
         });
 

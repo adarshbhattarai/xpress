@@ -35,4 +35,47 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({
   	redirectTo: '/login'
   });
-}]);
+}])
+
+/*ngNotify for angular notification*/
+.run([
+  'ngNotify',
+  function(ngNotify) {
+    
+    ngNotify.config({
+    theme: 'pure',
+    position: 'top',
+    duration: 3000,
+    sticky: false,
+    button: true,
+    html: false,
+    maximumOpen : 5
+
+    }); 
+  }
+])
+.run(function($rootScope,LoginService, $location) {
+ /* console.log("Session clear...");*/
+  var lastDigestRun = new Date();
+  /*console.log(lastDigestRun);*/
+  setInterval(function () {
+    console.log("setInterval executed");
+        var now = Date.now();
+        if (now - lastDigestRun >10 * 60 * 1000) {
+          /*console.log("Yime now" + now);*/
+          //console.log("if condition executed");
+          $location.path('/login').replace();
+          $rootScope.$apply();
+          sessionStorage.clear();
+         /* console.log("Executed Session out");*/
+          LoginService.logoutUser();
+        }
+    },  5* 60* 1000);
+
+    $rootScope.$watch(function() {
+      var now = Date.now();
+        lastDigestRun = new Date();
+    });
+})
+
+;

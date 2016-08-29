@@ -19,57 +19,16 @@ app.use(express.static(__dirname + '/app'));
 
 
 
-
 /*var Firebase = require('firebase');
-var myRoot = new Firebase('https://maillist.firebaseio.com');*/
-
-/*// add in bodyParser middleware to handle parsing POST requests
-app.use(express.bodyParser());*/
-
-// create reusable transport method
-/*var smtpTransport = nodemailer.createTransport('SMTP', {
-    service: "Gmail",
-    auth: {
-        user: "yeti.tech.xpress@gmail.com",
-        pass: "x-press-2016"
-    }
-});
-
-var mailOptions = {
-    from: "Andrew Pierce <yeti.tech.xpress@gmail.com>",
-    to: "yeti.tech.xpress@gmail.com",
-}
-
-app.get('/contact', function(req, res) {
-    res.sendfile('contact.html',{
-      root: './app'
-    });
-});
 
 
-
-app.post('/success', function(req, res) {*/
-
-    // add this subscriber to firebase
-  /*  subref = myRoot.child('subscribers');
-    childref = subref.push();
-    childref.set({ name: req.body.your_name, email: req.body.your_email});
-
-    // now send us an email notification of the new subscriber*/
-  /*  mailOptions.html = "<b>" + req.body.your_name + "</b><p>" + req.body.your_message + "</p>";
-    mailOptions.subject = "New message from " + req.body.your_name;
-    smtpTransport.sendMail(mailOptions, function(error, response) {
-        if(error) {
-            console.log(error);
-        }
-        else {
-            console.log("Message sent: " + response.message);
-        }
-        smtpTransport.close();
-    });
-    res.sendfile('success.html',{
-      root: './app'
-    });
+firebase.initializeApp({
+   serviceAccount: {
+    projectId: "x-press-yeti",
+    clientEmail: "xpressyeti@x-press-yeti.iam.gserviceaccount.com",
+    privateKey: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCiR6tHLMyf4SRv\npDBxoZaYl8ux5QUngDD652A3k3ShUScMmSr+Vp/89NOEuw8YmawaGnMvJ9qVtCDE\nDX4BM2i9CgUYqJ6KUBXIWQM+eX7XGFNW6TjRbbMvcInWctfqzenrX7nTwk0yaVAB\n1ttC6Mbmvn3yI1atdidh1BD+xLrS5MbXoR1CMICVrbJhCsawSIbw8xzOxnYRvJiw\nVsdt7wLFQKFZRfPHSGnWjE310rF++pATxQ3vgSYe7/GlgHrRAMP0//rqJyidRzK9\nJIoMGFY5Wzk3OXKcprMTGKEQwzDi9rHqWazpIr+Bl50x7c0ll2FiR7tHgEnHk+vK\nV+JBaipVAgMBAAECggEAMCsv1u+gSXCtvQmya3g4WFDuYH6HWiM95qvZLoXxX5TU\nD3RDg704vf/57PMNVxL+N71UJVIiGr+d3jPXDAozc7FOs/QRIyMEZDSvttKfaL9K\ntYiCmf+C6XjxIRtzpbm7TmdapFWPToBeBD2/VYv8xi8S+VWt+80PgYVOCiFhBwnx\nvGYLdo4qj0zaAz91TcjzBQzoGpjhIu3xcPWKOcjLxiBxLHIJXmuwWrLn3CInGUoX\nMkrkbWML0bGgemOeHI26vjl7H8VYxlfIR8BhRkcwnrh4GC45iPfE3Y2uS2GfCj+O\nNZcWu8/beE6/EPqQroVW6EjTHCGIh8DyeI8V88HLAQKBgQDgrRV81OmBO5JVo6oV\nSoiHzLX87J5FKrRCI5PcJP9ohM6yXTn+Rhm/dVagBLNhUEWfMtzqJs0/s+v2XO+G\nKzJkpScpSFTnl79+9C/ePUaJKR/1YucFiycoa7+hWsY2UsL+lsc0PHcO/TAidzQa\nG8efWGb/JbVCHAKrd1Jgqz9clQKBgQC455qQo+VZbO7uJHdi9guTn/7jpNGdikfG\n9pSiGSpGegewhBCevDeJzcaQGDvDDLL15o0dxCgFQVGs7dcoQjbEHhYZnRPZWg/m\nOE5r5QcCCITD/D63WoTEr0n/oZCqw2Lfb8UbREPku839hC6uscV5dBGeat/1bT+1\nnK71tjpmwQKBgQCeCACSMmwf81fllt3eZfOMmWf0hDZ67iOmVcH92aQwzyFYAgz1\nljcsHQuWOFg3/a9K4ArVQ/+gbBxvyETN+XpTonreJbtavrj6QiWdSzpe5adOAYf/\ntTYQz2EVzHSY5zOywTlSu6j+yQXfaDsklh+eLB8eHlbVLkCOfLpbtng11QKBgD+l\nCKDMqT70rfEugCGCC04O/k8hBj2xwS8M5PA+tTx4+HibnJTmuD8oozYqATgMAPV/\nHAeo4xWb/B8H5s0mrW8n4/eBB7oCtAJMU0H0HUtn3zsOcg/uilCg/VmOJRuCEWBT\nOoc+IhhzRF4Ex4S+D/jUKNRceSYjKpC6k8ZjqQqBAoGAXOVUcKvM18XXWJUYZs/G\nTNnXjuxmfoXSk8Wajff8BXaP+nqIKIq5pHFe0HYyxqIofDNs7euxqaZBRnc2kdPs\n4wgt65e3vUoaGN2YpDk9oZCwg4bWfcXrUejIYQ7/rGi9tkbDqRhZZrChoJPLrpcD\nk/I7IS5qYboXj5Ah5fMqGVQ=\n-----END PRIVATE KEY-----\n"
+  },
+  databaseURL: "https://x-press-yeti.firebaseio.com/"
 });
 */
 

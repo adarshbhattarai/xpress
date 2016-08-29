@@ -1,7 +1,0 @@
-{
-  "name": "https://x-press-yeti.firebaseio.com/",
-  "short_name": "https://x-press-yeti.firebaseio.com/",
-  "start_url": "/",
-  "display": "standalone",
-  "gcm_sender_id": "47763230236"
-}

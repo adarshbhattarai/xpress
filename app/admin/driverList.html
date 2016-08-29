@@ -1,3 +1,4 @@
+<link href="css/imageDisplay.css" rel="stylesheet">
 <div class="all-wrapper fixed-header left-menu">
   <div ng-include="'admin/AdminTemplate/adminHeader.html'"></div>
   <div ng-include="'admin/AdminTemplate/adminSidemenu.html'"></div>
@@ -362,7 +363,7 @@
             </tr>
             <tr>
                 <td><b>Driver Image</b></td>
-                <td><a href="{{driverPicture}}"><img ng-src="{{driverPicture}}" alt="Description" class="img-thumbnail" width="10%" /></td>
+                <td><img id="myImg" ng-src="{{driverPicture}}" alt="Description" class="img-thumbnail" width="200" height="100" ng-click="showImage(driverPicture)"/></td>
             </tr>
              <tr>
               <td colspan="2" bgcolor="#F8F8FF"><h4><b>Licence Details</b></h4></td>
@@ -413,3 +414,9 @@
     </div>
 </div>
 
+   <!-- The Modal for image when clicked-->
+    <div id="myModal" class="modal" >
+      <span class="close">×</span>
+      <img class="modal-content" id="img01">
+      <!-- <div id="caption"></div> -->
+    </div>

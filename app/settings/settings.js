@@ -64,7 +64,7 @@ angular.module('myApp.settings', ['ngRoute','firebase'])
       $location.path('/login');
   }
 
-
+$scope.messageAlert = true;
   var firebaseObj = new Firebase("https://x-press-yeti.firebaseio.com/user/business_customer");
   var fb =  $firebase(firebaseObj);
   var sync = $firebase(firebaseObj.startAt($scope.username).endAt($scope.username));
@@ -81,16 +81,16 @@ angular.module('myApp.settings', ['ngRoute','firebase'])
     $scope.city = details.city;
     $scope.state = details.state;
     $scope.zip = details.zip;
+    $scope.profilePictureURL = details.profilePictureURL;
     /*console.log( $scope.firstName);
     console.log(details.firstName);*/
+    console.log(details.phone);
 });
   console.log("This "+$scope.requests);
 
 
-
 $scope.update = function(request){
-
-
+    $scope.messageAlert = true;
     if(request === undefined) {
     console.log("Id is in if condittion"+$scope.id);
 
@@ -152,9 +152,10 @@ $scope.deletePost = function(request){
 
 $scope.editFormSubmit = function(){
 
+$scope.messageAlert = false;
 
-
-    if($scope.id ===undefined || $scope.id === null) {
+  /*This if condition is mentioned in addDetails*/
+    /*if($scope.id ===undefined || $scope.id === null) {
      console.log("PUSH");
      var user = LoginService.getUser();
      var firstName = $scope.firstName;
@@ -166,10 +167,6 @@ $scope.editFormSubmit = function(){
      var state = $scope.state;
      var zip = $scope.zip;
      var profilePicURL = $scope.profilePicURL;
-     console.log()
-     /*var role = 'USER';
-     console.log("User role is: "+role);*/
-     console.log(city + "  " + " State" + state);
      fb.$push({
          firstName:firstName,
          lastName:lastName,
@@ -183,23 +180,16 @@ $scope.editFormSubmit = function(){
          current_latitude:$scope.latitude,
          current_longitude:$scope.longitude,
          profilePicURL:profilePicURL,
-
-        /* role:role,*/
          '.priority':user
 
      });
-    /* $scope.id =  test.$loaded().then(function(array) {
-    console.log(array[0]);
-    array[0];
-    
-});*/
-     console.log("Array 0 value .. Scope id value " + $scope.id);
-      console.log("user " + user );
+    console.log("Array 0 value .. Scope id value " + $scope.id);
+    console.log("user " + user );
       
       $location.path('/home');
  }
 
-    else{
+    else{*/
         console.log("UPDATE");
         console.log("Outside Scope");
         console.log("here");
@@ -217,15 +207,18 @@ $scope.editFormSubmit = function(){
         records.zip = $scope.zip;
         records.current_longitude = $scope.longitude;
         records.current_latitude = $scope.latitude;
-        records.profilePictureURL = $scope.profilePicURL;
+        if($scope.profilePicURL == undefined){
+            records.profilePictureURL = records.profilePictureURL;
+        }else{
+            records.profilePictureURL = $scope.profilePicURL;
+        }    
         $scope.requests.$save(records);
         $scope.editForm = false ;
         console.log("records.firstName " + records.firstName); 
         console.log("latitude-->" + $scope.latitude);
         console.log("welllll..."+records.profilePictureURL);
 
-    }
-    
+    /*}*/
 }
 /*Image uploading*/
         var uploaderpp =  document.getElementById('uploader');
@@ -269,6 +262,7 @@ $scope.editFormSubmit = function(){
                       });
 
 
+/*show image in pop up model*/
 
 $scope.logout = function(){
    LoginService.logoutUser();

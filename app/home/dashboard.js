@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.dashboard', ['ngRoute','firebase'])
+angular.module('myApp.dashboard', ['ngRoute','firebase','ngNotify'])
 
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/home', {
@@ -8,8 +8,7 @@ angular.module('myApp.dashboard', ['ngRoute','firebase'])
 		controller: 'DashboardCtrl'
 	});
 }])
-
-.controller('DashboardCtrl', ['$scope','$location','LoginService','$firebase', function($scope,$location,LoginService,$firebase) {
+.controller('DashboardCtrl', ['ngNotify','$scope','$location','LoginService','$firebase', function(ngNotify,$scope,$location,LoginService,$firebase) {
     $scope.sideMenu = sessionStorage.sideMenu;
     console.log("hideMenu in dashboard "+ $scope.sideMenu);
 	$scope.username = LoginService.getUser();
@@ -35,7 +34,6 @@ angular.module('myApp.dashboard', ['ngRoute','firebase'])
        }
        
     }, true);
-
 
 	$scope.editPost = function(id) {
 
@@ -80,8 +78,14 @@ angular.module('myApp.dashboard', ['ngRoute','firebase'])
         });
     }
 
+    $scope.click = function(){
+         console.log("notification clicked");
+         ngNotify.set('Just notification test','success');  
+    }
+
     $scope.logout = function(){
         delete sessionStorage.loggedIn;
     	LoginService.logoutUser();
 	}
-}]);
+}])
+;

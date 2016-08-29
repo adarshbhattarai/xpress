@@ -34,6 +34,7 @@
 <link rel='stylesheet' href='html/assets/css/app.css'>-->
 <link rel="stylesheet" type="text/css" href="html/assets/css/plugins/datatables/bootstrap.datatables.css">
 <link rel="stylesheet" type="text/css" href="html/assets/css/plugins/datatables/datatables.css">
+<link rel="stylesheet" type="text/css" href="bower_components/ng-notify/dist/ng-notify.min.css">
 </head> 
 <body class="glossed">
      <div ng-view></div>
@@ -84,18 +85,18 @@
 <script src="logout/logout.js"></script>
 
 <!-- For GeoFire -->
-<script src="bower_components/firebase/dist/firebase.js"></script>
+<!-- <script src="bower_components/firebase/dist/firebase.js"></script>
 <script src="bower_components/rsvp/rsvp.js"></script>
 <script src="bower_components/angularfire/angularfire.js"></script>
 <script src="bower_components/geofire/dist/geofire.js"></script>
-<script src="bower_components/AngularGeoFire/dist/angularGeoFire.js"></script>
+<script src="bower_components/AngularGeoFire/dist/angularGeoFire.js"></script> -->
 
 <!-- GeoFire -->
 <script src="https://cdn.firebase.com/libs/geofire/4.0.0/geofire.min.js"></script>
 
 <!-- Map ApI -->
 <!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script> -->
-
+<!-- <script src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initAutocomplete" async defer></script> -->
 <!-- BrainTree Payment -->
 <script src="payment_methods/payment.js"></script>
 <!--Admin pannel js -->
@@ -113,11 +114,16 @@
 <script src="bower_components/angularUtils-pagination/dirPagination.js"></script>
 
 <!-- email verification -->
-<script src="bower_components/angular-mandrill/dist/angular-mandrill.js"></script>
+<!-- <script src="bower_components/angular-mandrill/dist/angular-mandrill.js"></script> -->
 
 <!--Firebase COnfig for google storage basically used in image Upload-->
 <!-- Adding Firebase to our web app-->
 <script src='templates/header.js'></script>
+
+<!-- ng notification -->
+<script src="bower_components/ng-notify/dist/ng-notify.min.js"></script>
+<script src="bower_components/ng-notify/src/scripts/ng-notify.js"></script>
+
 
 <script>
   
@@ -130,6 +136,9 @@
           firebase.initializeApp(config);
 
 </script>
+<!-- Firebase Simple Login -->
+<script src="https://cdn.firebase.com/js/simple-login/1.6.4/firebase-simple-login.js"></script>
+
 </body>
 </html>
 

@@ -86,7 +86,7 @@ $(function() {
       $(el).colpickHide();
     }
   });*/
-  $("[data-toggle='tooltip']").tooltip();
+/*  $("[data-toggle='tooltip']").tooltip();*/
   $('.widget-control-remove').on("click", function() {
     $(this).closest('.widget').slideUp("fast");
     return false;

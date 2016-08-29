@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.login', ['ngRoute','firebase'])
+angular.module('myApp.login', ['ngRoute','firebase','ngNotify'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/login', {
@@ -9,18 +9,100 @@ angular.module('myApp.login', ['ngRoute','firebase'])
   });
 }])
 
-.controller('LoginCtrl', ['$scope','$location','LoginService','$firebaseAuth','$firebase','$rootScope','Roles_Constant',function($scope,$location,LoginService,$firebaseAuth,$firebase,$rootScope,Roles_Constant) {
+.controller('LoginCtrl', ['ngNotify','$scope','$location','LoginService','$firebaseAuth','$firebase','$rootScope','Roles_Constant',function(ngNotify,$scope,$location,LoginService,$firebaseAuth,$firebase,$rootScope,Roles_Constant) {
 	var login = {};
 	$scope.login = login;
 	var firebaseObj = new Firebase("https://x-press-yeti.firebaseio.com");
 	var loginObj = $firebaseAuth(firebaseObj);
-
+	
 	/*loginObj.$onAuth(function(authData) {
 	    if(authData){
 	        LoginService.setUser(authData.password.email);
 	        $location.path('/welcome');
 	    }
  	});*/
+
+ 	/*Facebook login*/
+	$scope.facebookSignup= function(){
+		login.loading = true;
+		event.preventDefault();
+		firebaseObj.authWithOAuthPopup("facebook", function(error, authData) {
+		  if (error) {
+		    console.log("Login Failed!", error);
+		  }
+		  else {
+		  	sessionStorage.sideMenu = true;
+		  /*	alert("signup successfully through facebook....")*/
+			console.log("facebook singup..");
+			console.log(authData.facebook.public_profile);
+			console.log("Authentication successful...");
+		    // the access token will allow us to make Open Graph API calls
+		    console.log(authData.facebook.accessToken);
+		    console.log("Authenticated successfully with payload:", authData);
+    		$scope.facebookProfile = authData.facebook.profileImageURL;
+    		$scope.facebookEmail = authData.facebook.email;
+    		$scope.facebookUserAddress  = authData.facebook.user_hometown;
+
+    		var firebaseObj = new Firebase("https://x-press-yeti.firebaseio.com/user/business_customer");
+    		LoginService.setUser(authData.facebook.email);
+    		var fb = $firebase(firebaseObj);
+        	var user = LoginService.getUser();
+        	var firstName = authData.facebook.cachedUserProfile.first_name;
+        	var lastName = authData.facebook.cachedUserProfile.last_name;
+        	var email = authData.facebook.email;
+          	$scope.profilePictureURL = authData.facebook.profileImageURL;
+        	var profilePic = authData.facebook.profileImageURL;
+        	var role = 'USER';
+        	console.log("User role is: "+role);
+			firebaseObj.once("value", function(snapshot) {
+				var count = false; 
+				snapshot.forEach(function(messageSnapshot) {
+					if(messageSnapshot.child("email").val() == $scope.facebookEmail)
+					{
+						count = true;
+						console.log("Pushed or not .... If this comes then it is npt pushed to the database");
+						
+					}	
+					
+			  	});
+				/*storing facebook information in business_customer*/
+				if(!count){
+					console.log("Pushed or not .... If this comes then it is pushed to database");
+					fb.$push({
+		            firstName:firstName,
+		            lastName:lastName,
+		            email:email,
+		            emailId:user,
+		            role:role,
+		            profilePictureURL:profilePic,
+		            '.priority':user      
+		        	}).then(function(ref){
+			            console.log(ref); 
+			            console.log("Saved Successfully");
+			            console.log(firstName);
+			            console.log(user);
+			           $location.path('/home');       
+		        	},function(error){
+			            console.log("error: ");
+			            console.log(error);
+		        	});
+				} 
+				else{   
+					console.log("count= "+ count)
+					$location.path('/home').replace();
+					$scope.$apply();   
+
+				}
+			}); 
+		  }
+		},
+
+
+		{
+		  scope: "email,user_likes,public_profile,user_hometown,user_birthday,user_location" // the permissions requested
+		})  
+	}
+
 	$scope.SignIn = function(event){	
 		login.loading = true;
 		event.preventDefault();
@@ -61,6 +143,7 @@ angular.module('myApp.login', ['ngRoute','firebase'])
     				sessionStorage.adminRole = false;
     				console.log("User is admin: "+sessionStorage.adminRole);
     				$location.path('/home');
+    				/*ngNotify.set('Login successful.','success'); */
     			}
     			else if(details.role === Roles_Constant.Roles['admin']){
     				console.log("this is admin");
@@ -86,10 +169,40 @@ angular.module('myApp.login', ['ngRoute','firebase'])
 			login.loading = false;
 			$scope.loginError = true;
 			$scope.loginErrorMessage = error.message;
-			// login.loading = false;
+			login.loading = false;
 			console.log("Authentication failed...");
+			ngNotify.set('Error in login.','error'); 
 		});
 	}
+/*	$scope.messageAlert = false;
+	$scope.messageAlertError = false;*/
+	/*Forgot password*/
+	$scope.resetPassword= function(){
+		console.log("password reset");
+		var email = $scope.email;
+		console.log(email);
+		console.log($scope.email);
+		/*$scope.messageAlert = true;*/
+		firebaseObj.resetPassword({
+  			email: email
+		}, function(error) {
+  		if (error) {
+    		switch (error.code) {
+      			case "INVALID_USER":
+        		console.log("The specified user account does not exist.");
+        		alert("The specified user account does not exist.");
+       	 		break;
+      		default:
+        	console.log("Error resetting password:", error);
+    		}
+  		} else {
+    		console.log("Password reset email sent successfully!");
+    		alert("Password reset email sent successfully! \n Check your email: "+ $scope.email);
+  	}
+	});
+	
+
+    }
 
 	//Alterntate way of login
 	/*$scope.SignIn = function(event){
@@ -183,7 +296,9 @@ angular.module('myApp.login', ['ngRoute','firebase'])
     		console.log('done logout');
     		user='';
     		localStorage.removeItem('userEmail');
+    		sessionStorage.clear();
     		$location.path('/login');
+    		
 
 		}
 	}

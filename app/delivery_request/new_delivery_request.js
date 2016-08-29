@@ -70,7 +70,7 @@
         //dataType : 'json',
         success: function(clientToken){
           //alert('Ahhh:'+clientToken.token);
-          console.log(clientToken.token);
+        /*  console.log(clientToken.token);*/
          var token = clientToken.token;
          braintree.setup(token, "dropin", {
           container: "payment-form"

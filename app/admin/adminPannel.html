@@ -4,7 +4,22 @@
   th{
     cursor: pointer;
   }
-</style>
+.row.extra-bottom-padding{
+   margin-bottom: 30px;
+}
+
+hr.style1{
+  border-top: 1px solid #8c8b8b;
+}
+div.vertical-line{
+  border-right: solid 1px black;
+  background: #f0f0f5;
+ 
+}
+/*.row{
+  background-color: #b8b894;
+}
+*/</style>
 <div class="all-wrapper fixed-header left-menu">
   <!-- <div ng-include="'templates/header.html'"></div> -->
   <!-- <div ng-include="'templates/left-sidebar.html'"></div> -->
@@ -17,7 +32,52 @@
   <div class="main-content">
     <p class="lead">Welcome Admin</p>
     <!-- delivery details -->
-    <div class="widget widget-green">
+    <div class="row extra-bottom-padding">
+      <div class="col-md-6" >
+        <h4><b>Delivery Statistics</b></h4>
+          <!-- <hr class="style1"> -->
+            <div class="col-md-3 text-center vertical-line" >
+              <span class="count_top" ><i class="fa fa-user"></i> Total Request</span>
+              <!-- <div class="count">2500</div> -->
+              <div class="value-self">{{countNewDelivery}}</div>
+            </div>
+            <div class="col-md-2 text-center  vertical-line">
+              <span class="count_top"><i class="fa fa-clock-o"></i> Pending</span>
+              <div class="value-self">{{pendindgRequestCount}}</div>
+            </div>
+            <div class="col-md-2 text-center vertical-line">
+              <span class="count_top"><i class="fa fa-user"></i> Onroute</span>
+               <div class="value-self">{{approvedDeliveriesCount}}</div>
+            </div>
+            <div class="col-md-2 text-center vertical-line">
+              <span class="count_top"><i class="fa fa-user"></i>Cancelled</span>
+              <div class="value-self">{{cancelledDeliveriesCount}}</div>
+            </div>           
+      </div>
+      <div class="col-md-6">
+        <h4><b>Drivers Statistics</b></h4>
+          <!-- <hr class="style1"> -->
+            <div class="col-md-3 text-center vertical-line">
+              <span class="count_top"><i class="fa fa-user"></i> Total Request</span>
+             <div class="value-self">{{countDriverRequest}}</div>
+            </div>
+            <div class="col-md-2 text-center vertical-line">
+              <span class="count_top"><i class="fa fa-clock-o"></i> Pending </span>
+               <div class="value-self">{{pendindgDriverCount}}</div>
+            </div>
+            <div class="col-md-2 text-center vertical-line">
+              <span class="count_top"><i class="fa fa-user"></i> Approved </span>
+              <div class="value-self">{{approvedDriverCount}}</div>
+            </div>
+            <div class="col-md-2 text-center vertical-line">
+              <span class="count_top"><i class="fa fa-user"></i> Cancelled </span>
+              <div class="value-self">{{cancelledDriverCount}}</div>
+              <!-- <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span> -->
+            </div>
+      </div>
+    </div>
+
+    <!-- <div class="widget widget-green">
       <span class="offset_anchor" id="stat_charts_anchor"></span>
       <div class="widget-title">
         <div class="widget-controls">
@@ -88,10 +148,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-        <!-- Drivers details -->
-    <div class="widget widget-green">
+    <!-- Drivers details -->
+    <!-- <div class="widget widget-green">
       <span class="offset_anchor" id="stat_charts_anchor"></span>
       <div class="widget-title">
         <div class="widget-controls">
@@ -162,7 +222,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Google map -->
     <div class="row">

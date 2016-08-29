@@ -162,8 +162,6 @@ ref.once("value", function(snapshot) {
     $scope.approvedDeliveriesCount = approvedcount;
     $scope.cancelledDeliveriesCount = cancelledcount;
     $scope.pendindgRequestCount = pendingCount;
-    console.log(approvedcount);
-    console.log(cancelledcount);
     console.log("Counts");
 
 });

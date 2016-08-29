@@ -29,7 +29,14 @@ angular.module('myApp.addDetails', ['ngRoute','firebase'])
         var city = $scope.user.city;
         var state = $scope.user.state;
         var zip = $scope.user.zip;
-        var profilePic = $scope.profilePicURL;
+        if($scope.profilePictureURL == undefined){
+          console.log("not defined");
+          $scope.profilePictureURL = 'https://firebasestorage.googleapis.com/v0/b/x-press-yeti.appspot.com/o/default_profile_image%2Fprofile-icon.png?alt=media&token=7275d15c-814e-4d82-95a4-de9d689e3a12';
+        }else{
+          console.log("Is defined");
+          $scope.profilePictureURL = $scope.profilePicURL;
+        }
+        var profilePic = $scope.profilePictureURL;
         var role = 'USER';
         console.log("User role is: "+role);
 

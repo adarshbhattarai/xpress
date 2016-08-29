@@ -670,6 +670,16 @@ pre code {
   margin-left: 5px;
   margin-right: 5px;
 }
+.loginRow{
+  margin-left: 0px;
+  margin-right: 0px;
+  background-color: black;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  font-size: 20px;
+  color: #ff8533;
+
+}
 .row:before,
 .row:after {
   content: " ";

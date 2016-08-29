@@ -18,6 +18,7 @@ function initAutocomplete() {
 
 }
 $(document).ready(function(){
+    console.log("map function loaded success...");
     if(navigator.geolocation)
         navigator.geolocation.getCurrentPosition(success,fail);
         else
@@ -26,6 +27,7 @@ $(document).ready(function(){
     
 });
 function success(position){
+    console.log("map loaded success...");
     var googleLatalng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     console.log(position.coords.latitude );
         console.log( position.coords.longitude);
@@ -46,7 +48,7 @@ function success(position){
     addMarker1(map, googleLatalng, "Current Location", "red");
    /* $("p").html("Latitude: "+ position.coords.latitude + "<br>Longitude: "+ position.coords.longitude +
                 "<br>Accuracy: "+ position.coords.accuracy);*/
-    
+    initAutocomplete();
 
 }
 function addMarker1(map, googleLatalng, title, pointerColor){
@@ -59,7 +61,7 @@ function addMarker1(map, googleLatalng, title, pointerColor){
     };
 
     var marker = new google.maps.Marker(markerOption);
-    var contentString="Testing";
+    var contentString="Current Location";
     marker.addListener('click', function() {
         infowindow.close(); 
         infowindow.open(map, marker);

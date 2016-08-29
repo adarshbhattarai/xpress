@@ -1,6 +1,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initAutocomplete" async defer></script>
+<link href="css/imageDisplay.css" rel="stylesheet">
 <style type="text/css">
-  th{
+   th{
     cursor: pointer;
   }
 </style>
@@ -9,7 +10,6 @@
   <div ng-include="'admin/AdminTemplate/adminSidemenu.html'"></div>
   
   <div class="main-content">
-
     <!--New Requests from Drivers list -->
   	<div class="row">
       <div class="widget widget-blue">
@@ -106,7 +106,7 @@
                       <td>{{request.address}}</td>
                       <td>{{request.destinationAddress}}</td>
                       <td>{{request.noOfBox}}</td>
-                      <td><a href="{{request.picture}}"><img ng-src="{{request.picture}}" alt="Description"  width="20%" /></td>
+                      <td><img id="myImg" ng-src="{{request.picture}}" alt="Description"  width="200" height="100" ng-click="showImage(request.picture)"/></td>
                       <td>{{request.status}}</td>
                       <td>
                         <select name="status" class="form-control selectpicker" ng-change="statusChange(this, request)" ng-model ="status" required>
@@ -120,6 +120,7 @@
                     </tr>    
                   </tbody>
                 </table>
+    
                 <div class="row">
                   <div class="col-sm-12">
                     <div class="pull-right">
@@ -373,6 +374,11 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
+<!-- The Modal for image when clicked-->
+<div id="myModal" class="modal" >
+  <span class="close">×</span>
+  <img class="modal-content" id="img01">
+  <!-- <div id="caption"></div> -->
+ </div>

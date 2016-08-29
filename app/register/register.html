@@ -3,27 +3,66 @@
 <script type="text/javascript" src="spin.min.js"></script>
 <script type="text/javascript" src="ladda.min.js"></script>
 <link href="ladda-themeless.min.css" rel="stylesheet">
-<script src="bower_components/angular-mandrill/dist/angular-mandrill.js"></script>
-  
-	 <div class="container">
+<!-- <script src="bower_components/angular-mandrill/dist/angular-mandrill.js"></script> -->
+<!-- <script src="../node_modules/mailgun-js/lib/request.js"></script>
+<meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"> -->
+
+	 <div class="container">	
 	 	<div class="jumbotron" style="padding-bottom:0px;">
 	 		<h2>xPress Signup</h2>
 	 	</div>
+	 	 <!-- Alert message -->
+       <!--  <div class="alert alert-success" ng-hide="messageAlert">
+          <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>Success!</strong> Signed up successfully. Congractulation!!!.
+        </div> -->
 	 	<form class="form-signin" name="regForm" role="form">
-	 	<p class="danger" ng-show="regError">{{regErrorMessage}}</p>
+	 	 <!-- 	<p class="text-success" ng-show="regSuccess">You are scccessfully Signed up</p> -->
+	 	 <div ng-hide="emailForm">
+	 		<p class="danger" ng-show="regError">{{regErrorMessage}}</p>
 	 		<div class="form-group" ng-class="{'has-error': regForm.email.$invalid }">
-	 			<label>Email</label>
+	 			<label>Please Enter your Email</label>
 	 			<input type="email" name="email" class="form-control" ng-model="user.email">
 	 			<p ng-show="regForm.email.$invalid" class="danger">Enter a valid email.</p>
 	 		</div>
-	 		<div class="form-group" ng-class="{'has-error': regForm.password.$invalid }">
+	 		<!-- <div class="form-group" ng-class="{'has-error': regForm.password.$invalid }">
 	 			<label>Password</label>
 	 			<input type="password" name="password" class="form-control" ng-model="user.password" ng-minlength='5'>
 	 			<p ng-show="regForm.password.$error.minlength" class="danger">Min password length is 5 characters.</p>
+	 		</div> -->
+	 		<button type="button" ladda-loading="signup.loading" data-style="expand-right" ng-click="next();" ng-disabled="!user.email" class="btn btn-lg segoe-ui-light ladda-button btn-primary btn-block">Next</button>
 	 		</div>
-	 		<button type="button" ladda-loading="signup.loading" data-style="expand-right" ng-click="signUp();" ng-disabled="!user.email || !user.password" class="btn btn-lg segoe-ui-light ladda-button btn-primary btn-block">Register</button>
+
+	 		<div ng-show="verificationForm">
+	 			<div class="form-group" ng-class="{'has-error': regForm.verificationpassword.$invalid }">
+	 			<label>Please Enter the Verification Code which has been sent to your email: <b>{{user.email}}</b>  </label>
+	 			<input type="password" name="password" class="form-control" ng-model="user.verification" ng-minlength='5' placeholder="Verification Code">
+	 			<p ng-show="regForm.password.$error.minlength" class="danger">Min password length is 5 characters.</p>
+
+	 			<button type="button" ladda-loading="signup.loading" data-style="expand-right" ng-click="createPassword();" ng-disabled="!user.verification" class="btn btn-lg segoe-ui-light ladda-button btn-primary btn-block">Verify</button>
+				</div>
+			</div>
+
+			<div  ng-show = "passwordForm">
+				<!-- <p class="text-success" ng-show="verificationSuccess">Email verification successful.</p> -->
+	 			<div class="form-group" ng-class="{'has-error': regForm.password.$invalid }">
+	 			<label>Create new Password</label>
+	 			<input type="password" name="password" class="form-control" ng-model="user.password" ng-minlength='5'>
+	 			<p ng-show="regForm.password.$error.minlength" class="danger">Min password length is 5 characters.</p>
+	 			<label>Confirm Password</label>
+	 			<input type="password" name="confirm_password" class="form-control" ng-model="user.confirmPassword" ng-minlength='5'>
+	 			<p ng-show="regForm.confirmPassword.$error.minlength" class="danger">Min password length is 5 characters.</p>
+	 			<button type="button" ladda-loading="signup.loading" data-style="expand-right" ng-click="signUp();" ng-disabled="!user.password || !user.confirmPassword" class="btn btn-lg segoe-ui-light ladda-button btn-primary btn-block">Sign Up</button>
+				</div>
+			</div>
+
 	 		<label class="checkbox">
 	 			Already a member? <a href="#/login"> Sign In</a>
 	 		</label>
 	 	</form>
+
+
+	
+	 
 </div>
+

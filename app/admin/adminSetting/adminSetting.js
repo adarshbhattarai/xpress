@@ -1,7 +1,7 @@
 'use strict';
 function initAutocomplete() {
     var input = document.getElementById('address');
-    searchBox = new google.maps.places.Autocomplete(input);
+    var searchBox = new google.maps.places.Autocomplete(input);
 }
 
 angular.module('myApp.adminSettings', ['ngRoute','firebase'])
